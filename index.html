@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bakery P&L Management 面包店损益管理 — Bilingual Learning</title>
+<title>Kelvin Team Training — Bilingual Learning 双语培训</title>
 <style>
 :root{--bg:#fbf6ee;--card:#fff;--ink:#3b2a1e;--mute:#7a6757;--line:#eadfce;--crust:#b5651d;--crust-bg:#f7e7d3;--leaf:#4f7a3a;--leaf-bg:#e6f0dc;--red:#a8341f;--red-bg:#f8e1db;--sky:#2c6a8f;--sky-bg:#dcebf4;--r:12px}
 *{box-sizing:border-box}
@@ -453,7 +453,7 @@ try{var sl=localStorage.getItem('pl_lang');if(sl)setLang(sl);}catch(e){}
 
 /* ---------- sidebar ---------- */
 function side(cur){
- var h='<h1>'+bi('Bakery P&L Management','面包店损益管理')+'</h1><p class="sub">Bilingual training · 双语培训</p>';
+ var h='<h1>'+bi('Kelvin Team Training','Kelvin 团队培训')+'</h1><p class="sub">Bilingual training · 双语培训</p>';
  PAGES.forEach(function(p){
   var n=p.n?p.n:(p.k==='home'?'⌂':p.k==='case'?'$':p.k==='plan'?'90':'✓');
   h+='<button class="nv'+(p.k===cur?' on':'')+(seen[p.k]?' done':'')+'" data-k="'+p.k+'"><span class="n">'+(seen[p.k]&&p.k!==cur?'✓':n)+'</span><span class="t">'+p.en+'<small>'+p.zh+'</small></span></button>';
@@ -476,7 +476,7 @@ function navBtns(k){
 function home(){
  var F=[['Net Sales = TC × AC','净销售 = 交易笔数 × 客单价'],['Gross Profit = Net Sales − COGS','毛利 = 净销售 − 销售成本'],['Operating Profit = Net Sales − COGS − Labour − Rent − Other','营运利润 = 销售 − 原料 − 人工 − 租金 − 其他费用'],['Operating Margin = Operating Profit ÷ Net Sales × 100%','营运利润率 = 营运利润 ÷ 净销售 × 100%'],['Prime Cost = COGS + Labour','主要成本 = 原料 + 人工'],['Break-even Sales = Fixed Costs ÷ Contribution Margin Ratio','盈亏平衡销售 = 固定成本 ÷ 边际贡献率']];
  var O=[['Read P&L and calculate profit margin','读懂损益表与利润率'],['Diagnose sales and cost variances','分析销售及成本差异'],['Build a realistic recovery plan','制定可执行扭亏方案'],['Assign actions with measurable KPIs','分配责任与可量化指标'],['Present a weekly management update','做每周管理汇报']];
- var h='<p class="eyebrow">GOKOKU-STYLE TRAINING · ILLUSTRATIVE</p><h2 class="title">Bakery P&L Management<br><span class="zh">面包店损益管理</span></h2>'
+ var h='<p class="eyebrow">KELVIN TEAM TRAINING · ILLUSTRATIVE</p><h2 class="title">Kelvin Team Training<br><span class="zh">Kelvin 团队培训</span></h2>'
  +'<div class="card"><p>'+b('From loss-making to profitable operations. Audience: RM · AM · SRM · BOH / FOH Leaders. 8 core modules, 3 advanced modules on production plans and deployment, a case study, Q&A, ownership and an assessment.','从亏损诊断到盈利改善。培训对象：RM、AM、SRM、BOH/FOH Leaders。含 8 个核心模块、3 个关于生产计划与调配的进阶模块、案例、课堂问答、责任分配和结业测验。')+'</p><div class="row"><button class="btn" data-go="m1">'+bi('Start module 01','开始模块 01')+' →</button></div></div>'
  +'<div class="card"><h3>'+bi('LEARNING OUTCOMES','学习目标')+'</h3>'+O.map(function(o,i){return '<p style="margin:6px 0">'+(i+1)+'. '+bi(o[0],o[1])+'</p>';}).join('')+'</div>'
  +'<div class="card"><h3>'+bi('CORE P&L FORMULAS','核心公式')+'</h3>'+F.map(function(f){return '<span class="f">'+f[0]+'<br><span style="color:var(--mute)">'+f[1]+'</span></span>';}).join('')+'</div>'

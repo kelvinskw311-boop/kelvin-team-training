@@ -482,6 +482,147 @@ function bind13(){
  upd();
 }
 
+/* ---------- extra illustrations (second picture per module) ---------- */
+var ILX={};
+function ttl(s){return T(10,14,s,{a:'start',s:12,w:600});}
+ILX.m1={cap:['Where each $100 of sales goes (example): it adds up to $103','每$100销售的去向（示例）：合计$103，所以亏$3'],f:function(){
+ var d=[['45',180,C.crustL,C.crust,'COGS 原料'],['23',92,C.skyL,C.sky,'Labour 人工'],['23',92,C.leafL,C.leaf,'Rent 租金'],['12',48,'#e3d8c6',C.mute,'Other 其他']],x=40,s=ttl('Sales $100 = 440 px mark  销售$100');
+ d.forEach(function(g,i){s+=R(x,34,g[1],36,g[2],g[3],3)+T(x+g[1]/2,52,g[0],{w:600})+T(x+g[1]/2,84,g[4],{s:11,c:C.mute});x+=g[1];});
+ s+='<line x1="440" y1="26" x2="440" y2="76" stroke="'+C.ink+'" stroke-dasharray="4 3"/>'+R(440,34,12,36,C.redL,C.red,2)+T(446,100,'−3',{w:600,c:C.red})+T(440,22,'$100',{s:11});
+ return SV(112,s,'Costs add to 103 against sales of 100');}};
+ILX.m2={cap:['Sales by daypart (example, total $1,600): find which part to grow','按时段销售（示例，合计$1,600）：找出要加强的时段'],f:function(){
+ var d=[['Morning 早上',400],['Lunch 午餐',500],['Afternoon 下午',300],['Evening 晚上',400]],s=ttl('Sales by daypart 按时段销售');
+ d.forEach(function(r,i){var y=28+i*30;s+=T(10,y+10,r[0],{a:'start',s:12})+R(120,y,r[1]*0.6,20,i===1?C.crust:C.skyL,i===1?'none':C.sky,3)+T(120+r[1]*0.6+8,y+10,'$'+r[1],{a:'start',s:12,w:600});});
+ return SV(156,s,'Lunch is the biggest daypart at 500 dollars');}};
+ILX.m3={cap:['Too little or too much both cost money: aim for the sweet spot','太少太多都亏钱：目标是中间的最佳点'],f:function(){
+ var s=ttl('Total loss $ 总损失');
+ s+='<path d="M40 36 Q240 196 440 36" fill="none" stroke="'+C.crust+'" stroke-width="2.5"/><line x1="40" y1="130" x2="440" y2="130" stroke="'+C.line+'"/>'
+ +'<circle cx="240" cy="116" r="6" fill="'+C.leaf+'"/>'+T(240,92,'Sweet spot 最佳点',{w:600,c:C.leaf})
+ +T(40,148,'Too little: stock-outs 太少：缺货',{a:'start',s:11,c:C.mute})+T(440,148,'Too much: waste 太多：损耗',{a:'end',s:11,c:C.mute})
+ +T(240,166,'Production quantity 生产量 →',{s:11,c:C.mute});
+ return SV(176,s,'Loss curve is lowest in the middle between too little and too much production');}};
+ILX.m4={cap:['Two overlapping shifts: the overlap after the lunch peak is idle time (example)','两个班次重叠：午高峰后的重叠就是空闲人工（示例）'],f:function(){
+ var X=function(h){return 40+(h-8)*35;},s=ttl('Shifts vs demand 班次与需求');
+ s+=R(X(8),34,X(16)-X(8),24,C.skyL,C.sky,3)+T(X(8)+8,46,'Shift A 8–16',{a:'start',s:11})
+ +R(X(12),62,X(20)-X(12),24,C.skyL,C.sky,3)+T(X(12)+8,74,'Shift B 12–20',{a:'start',s:11})
+ +R(X(14),30,X(16)-X(14),60,C.redL,C.red,3)+'<rect x="'+X(14)+'" y="30" width="'+(X(16)-X(14))+'" height="60" fill="none" stroke="'+C.red+'" stroke-dasharray="4 3"/>'
+ +R(X(12),98,X(14)-X(12),14,C.crust,'',2)+R(X(18),98,X(19)-X(18),14,C.crust,'',2)+T(X(8),105,'Peak 高峰',{a:'start',s:11,c:C.mute})
+ +T((X(14)+X(16))/2,22,'Idle 空闲',{s:11,c:C.red,w:600});
+ for(var h=8;h<=20;h+=2)s+=T(X(h),128,h+':00',{s:10,c:C.mute});
+ return SV(142,s,'Shift A and B overlap between 14:00 and 16:00 after the lunch peak');}};
+ILX.m5={cap:['Margin of safety: sales must pass the break-even line (example)','安全边际：销售要越过盈亏平衡线（示例）'],f:function(){
+ var X=function(k){return 40+k*2.5;},s=ttl('Sales $k 销售（千）');
+ s+=R(X(0),40,X(109.4)-X(0),30,C.redL,'',0)+R(X(109.4),40,X(160)-X(109.4),30,C.leafL,'',0)
+ +T(150,55,'Loss zone 亏损区',{c:C.red,w:600})+T(385,55,'Profit zone 盈利区',{c:C.leaf,w:600,s:11})
+ +'<line x1="'+X(109.4)+'" y1="32" x2="'+X(109.4)+'" y2="80" stroke="'+C.ink+'" stroke-width="2"/>'+T(X(109.4),24,'Break-even $109.4k 盈亏平衡',{s:11,w:600})
+ +'<circle cx="'+X(100)+'" cy="55" r="5" fill="'+C.red+'"/>'+T(X(100)-4,98,'Now $100k 现在',{a:'end',s:11})
+ +'<circle cx="'+X(115)+'" cy="55" r="5" fill="'+C.leaf+'"/>'+T(X(115)+4,98,'Target $115k 目标',{a:'start',s:11});
+ return SV(116,s,'Current sales of 100 thousand are below break-even of 109.4 thousand');}};
+ILX.m6={cap:['Pick levers by impact and effort: do the high-impact easy ones first','按影响与难度选杠杆：先做影响大又容易的'],f:function(){
+ var s=ttl('Impact ↑ 影响   Effort → 难度');
+ s+=R(40,26,200,70,C.leafL,C.leaf,0)+R(240,26,200,70,C.skyL,C.sky,0)+R(40,96,200,70,'#efe7d8',C.mute,0)+R(240,96,200,70,C.redL,C.red,0)
+ +T(52,40,'Do first 先做',{a:'start',s:11,w:600,c:C.leaf})+T(252,40,'Plan 规划',{a:'start',s:11,w:600,c:C.sky})+T(52,110,'Quick tidy 顺手做',{a:'start',s:11,w:600,c:C.mute})+T(252,110,'Avoid 暂缓',{a:'start',s:11,w:600,c:C.red})
+ +'<circle cx="140" cy="68" r="5" fill="'+C.leaf+'"/>'+T(150,68,'Waste control 损耗',{a:'start',s:11})
+ +'<circle cx="270" cy="68" r="5" fill="'+C.sky+'"/>'+T(280,68,'Bundles 套餐',{a:'start',s:11})
+ +'<circle cx="70" cy="138" r="5" fill="'+C.mute+'"/>'+T(80,138,'Display tidy 陈列',{a:'start',s:11})
+ +'<circle cx="270" cy="138" r="5" fill="'+C.red+'"/>'+T(280,138,'Renovation 装修',{a:'start',s:11});
+ return SV(180,s,'Impact versus effort grid with four example levers');}};
+ILX.m7={cap:['Escalate when it is not solved: each level has a time limit','没解决就往上报：每一级都有时间限制'],f:function(){
+ var d=[['Lead 组长','Same day 当天'],['RM','48 hours 48小时'],['SRM','Weekly 每周'],['VPO','Monthly 每月']],s=ttl('Escalation ladder 升级阶梯');
+ d.forEach(function(g,i){var x=40+i*105,h=36+i*28,y=150-h;s+=R(x,y,98,h,[C.leafL,C.skyL,C.crustL,'#efe7d8'][i],[C.leaf,C.sky,C.crust,C.mute][i],3)+T(x+49,y+16,g[0],{w:600})+T(x+49,166,g[1],{s:11,c:C.mute});});
+ return SV(180,s,'Four step ladder from team lead to VPO with time limits');}};
+ILX.m8={cap:['A variance bridge: explain the gap between budget and actual (example, $k)','差异桥：解释预算与实际之间的差距（示例，千元）'],f:function(){
+ var st=[['Budget','预算',5,'t'],['Sales','销售',-2,'d'],['COGS','原料',-1,'d'],['Labour','人工',1,'d'],['Actual','实际',3,'t']],Y=function(v){return 120-v*14;},s=ttl('Profit bridge 利润桥'),run=0;
+ s+='<line x1="20" y1="'+Y(0)+'" x2="470" y2="'+Y(0)+'" stroke="'+C.mute+'"/>';
+ st.forEach(function(g,i){var x=30+i*88,a,bb,col;
+  if(g[3]==='t'){a=0;bb=g[2];run=g[2];col=C.sky;}else{a=run;bb=run+g[2];run=bb;col=g[2]>=0?C.leaf:C.red;}
+  var y1=Y(Math.max(a,bb)),y2=Y(Math.min(a,bb));
+  s+=R(x,y1,60,Math.max(2,y2-y1),col,'',3)+T(x+30,y1-9,(g[3]==='d'?(g[2]>0?'+':'−'):'')+Math.abs(g[2]),{w:600,s:12})+T(x+30,Y(0)+14,g[0],{s:11})+T(x+30,Y(0)+28,g[1],{s:11,c:C.mute});});
+ return SV(168,s,'Budget profit 5 minus sales 2 minus COGS 1 plus labour 1 equals actual profit 3');}};
+ILX.m9={cap:['The daily review loop: plan, bake, sell, record, compare, adjust','每日检讨循环：计划、烘焙、销售、记录、对比、调整'],f:function(){
+ var d=[['Plan','计划'],['Bake','烘焙'],['Sell','销售'],['Record','记录'],['Compare','对比'],['Adjust','调整']],s=ttl('Daily loop 每日循环'),i,x;
+ for(i=0;i<6;i++){x=6+i*80;s+=R(x,28,66,46,i%2?C.skyL:C.crustL,i%2?C.sky:C.crust,6)+T(x+33,44,d[i][0],{w:600,s:12})+T(x+33,62,d[i][1],{s:11,c:C.mute});if(i<5)s+=arrow(x+68,51,x+78,51);}
+ s+='<path d="M439 76 C439 108 39 108 39 78" fill="none" stroke="'+C.mute+'" stroke-dasharray="4 4"/>'+arrow(39,92,39,78)+T(240,120,'Next day uses what you learned 明天用今天学到的',{s:11,c:C.mute});
+ return SV(134,s,'Six step daily loop that returns to planning');}};
+ILX.m10={cap:['Bake waves land before the peak starts, not during it (example)','烘焙批次要在高峰开始前完成，而不是高峰中才开始（示例）'],f:function(){
+ var s=ttl('Customers per hour 每小时客流'),base=120,sc=2.6;
+ DEF10.forEach(function(v,i){var x=28+i*37,pk=(i===3||i===4||i===9);s+=R(x,base-v*sc,30,v*sc,pk?C.crust:C.skyL,pk?'none':C.sky,3)+T(x+15,base+12,pad(8+i),{s:10,c:C.mute});});
+ [2,8].forEach(function(i){var x=28+i*37+15;s+='<polygon points="'+(x-7)+',160 '+(x+7)+',160 '+x+',148" fill="'+C.leaf+'"/>';});
+ s+=T(28,180,'▲ Bake wave 烘焙批次',{a:'start',s:11,c:C.leaf,w:600})+T(250,180,'■ Peak hour 高峰小时',{a:'start',s:11,c:C.crust,w:600});
+ return SV(192,s,'Bake wave markers sit one hour before each peak hour');}};
+ILX.m11={cap:['Plan quantity follows a demand index by day type (example)','计划量按日型需求指数调整（示例）'],f:function(){
+ var d=[['Mon–Thu','周一至四',100],['Fri','周五',115],['Sat','周六',130],['Sun','周日',120],['PH eve','假期前夕',140],['PH','公共假期',90],['Rain','雨天',75]],s=ttl('Demand index (weekday = 100) 需求指数');
+ d.forEach(function(g,i){var x=13+i*66;s+='<rect x="'+x+'" y="26" width="58" height="76" rx="6" fill="'+C.crust+'" opacity="'+(0.12+(g[2]-70)/110)+'"/>'+R(x,26,58,76,'none',C.crust,6)+T(x+29,48,g[2],{w:600,s:16})+T(x+29,70,g[0],{s:11})+T(x+29,86,g[1],{s:10,c:C.mute});});
+ s+=T(240,122,'Plan quantity = base quantity × index ÷ 100  计划量 = 基准量 × 指数 ÷ 100',{s:11,c:C.mute});
+ return SV(136,s,'Seven day types with demand index from 75 to 140');}};
+ILX.m12={cap:['The reports only see recorded use: unrecorded bins and staff meals hide in the gap','报表只看得到有记录的用量：没记录的丢弃和员工餐就藏在差额里'],f:function(){
+ var s=ttl('Food cost: what the reports can and cannot see 报表看得见与看不见的');
+ s+=R(40,30,340,36,C.skyL,C.sky,3)+T(210,48,'Recorded and counted 有记录并盘点',{s:12,w:600})
+ +R(380,30,30,36,C.redL,C.red,3)+R(410,30,30,36,C.redL,C.red,3)
+ +'<line x1="395" y1="66" x2="395" y2="86" stroke="'+C.mute+'"/>'+T(410,95,'Binned, no record 丢弃无记录',{a:'end',s:11,c:C.red})
+ +'<line x1="425" y1="66" x2="425" y2="108" stroke="'+C.mute+'"/>'+T(440,117,'Staff meal, no record 员工餐无记录',{a:'end',s:11,c:C.red});
+ return SV(132,s,'Unrecorded discards and staff meals are not visible in the report');}};
+ILX.m13={cap:['Three zones: staff can fix, report first, or call PM','三个区：员工自己处理、先上报、叫PM'],f:function(){
+ var cols=[['Staff can fix 员工处理',C.leafL,C.leaf,[['Change a bulb','换灯泡'],['Tighten a screw','拧紧螺丝'],['Wipe and reset','擦拭重置']]],['Report first 先上报',C.crustL,C.crust,[['Under warranty','保修期内'],['Landlord area','业主区域']]],['Call PM 叫PM',C.redL,C.red,[['Wiring','电线'],['Gas smell','煤气味'],['Water leak','漏水']]]],s='';
+ cols.forEach(function(c,i){var x=24+i*146;s+=R(x,10,136,32,c[1],c[2],6)+T(x+68,26,c[0],{w:600,s:12});c[3].forEach(function(it,j){var y=64+j*32;s+=T(x+68,y,it[0],{s:11})+T(x+68,y+14,it[1],{s:11,c:C.mute});});});
+ return SV(166,s,'Three columns: staff fix, report first, call PM');}};
+ILX.m14={cap:['Fixed costs keep the same dollars; variable costs move with sales','固定成本金额不变；变动成本随销售变化'],f:function(){
+ var F=[['Rent (base) 底租'],['Levy 外劳税'],['Lease 设备租赁'],['Depreciation 折旧'],['Fixed salary 固定薪水']],V=[['COGS 原料'],['Card commission 刷卡费'],['Bonus 花红'],['Promotion 促销']],s='';
+ s+=R(20,10,210,32,C.skyL,C.sky,6)+T(125,26,'Fixed: same $ each month 固定',{w:600,s:12})+R(250,10,210,32,C.crustL,C.crust,6)+T(355,26,'Variable: moves with sales 变动',{w:600,s:12});
+ F.forEach(function(g,i){s+=R(20,52+i*26,210,22,'none',C.line,4)+T(32,63+i*26,g[0],{a:'start',s:12});});
+ V.forEach(function(g,i){s+=R(250,52+i*26,210,22,'none',C.line,4)+T(262,63+i*26,g[0],{a:'start',s:12});});
+ return SV(190,s,'Five fixed cost lines and four variable cost lines');}};
+ILL.m14=function(){
+ var s='',P=[[20,'Slow month: sales $80k 淡月',80],[270,'Busy month: sales $120k 旺月',120]];
+ P.forEach(function(p){var x=p[0],w=190,r=20/p[2]*w,l=4/p[2]*w;
+  s+=T(x,16,p[1],{a:'start',s:12,w:600})+R(x,28,w,40,'#efe7d8',C.line,3)+R(x,28,r,40,C.crust,'',3)+R(x+r,28,l,40,C.sky,'',3)
+  +T(x,86,'Rent $20k = '+(Math.round(2000/p[2]*10)/10)+'%',{a:'start',s:12,c:C.crust,w:600})+T(x,104,'Levy $4k = '+(Math.round(400/p[2]*10)/10)+'%',{a:'start',s:12,c:C.sky,w:600});});
+ s+=arrow(214,48,262,48)+T(238,40,'+50%',{s:11,c:C.mute})+T(240,134,'Same dollars, lower percentage 金额不变，占比下降',{s:12,c:C.mute});
+ return SV(148,s,'Rent and levy dollars stay the same while their share of sales falls from busy to slow month');};
+
+/* M14 extras */
+function x14(){
+ var tool='<div class="card" id="fbox"><h3>'+bi('TRY IT: fixed cost and break-even','动手试试：固定成本与盈亏平衡')+'</h3>'
+ +'<p class="note">'+b('Monthly figures in SGD. Example values match the break-even module.','月度数字（新币）。示例数值与「盈亏平衡」模块一致。')+'</p>'
+ +'<div class="hr hr6" style="margin-top:8px">'
+ +'<div><label>'+bi('Net sales','净销售')+'</label><input type="number" min="1" id="f1" value="100000"></div>'
+ +'<div><label>'+bi('Rent','租金')+'</label><input type="number" min="0" id="f2" value="15000"></div>'
+ +'<div><label>'+bi('Levy','外劳税')+'</label><input type="number" min="0" id="f3" value="3000"></div>'
+ +'<div><label>'+bi('Fixed salary','固定薪水')+'</label><input type="number" min="0" id="f4" value="12000"></div>'
+ +'<div><label>'+bi('Lease and depreciation','租赁与折旧')+'</label><input type="number" min="0" id="f5" value="5000"></div>'
+ +'<div><label>'+bi('Variable cost %','变动成本率 %')+'</label><input type="number" min="0" max="99" step="0.5" id="f6" value="68"></div></div>'
+ +'<div class="row"><button class="btn ghost" id="freset">'+bi('Reset to example','恢复示例')+'</button></div>'
+ +'<div class="err" id="fe">'+bi('Enter numbers (net sales above 0, costs 0 or more, variable cost % from 0 to 99).','请输入数字（净销售须大于0，成本须大于或等于0，变动成本率0至99）。')+'</div>'
+ +'<div class="kpi"><div><span class="note">'+bi('Total fixed cost','固定成本合计')+'</span><b id="fk1"></b></div><div><span class="note">'+bi('Fixed % of sales','固定成本占销售')+'</span><b id="fk2"></b></div><div><span class="note">'+bi('Break-even sales','盈亏平衡销售')+'</span><b id="fk3"></b></div><div><span class="note">'+bi('Sales vs break-even','销售对比盈亏平衡')+'</span><b id="fk4"></b></div></div>'
+ +'<p class="note" id="fd"></p></div>';
+ var ct=tbl([bi('Fixed cost','固定成本'),bi('Can the store change it?','门店能改吗？'),bi('What the store can do','门店能做什么')],[
+  [b('<strong>Rent</strong>','<strong>租金</strong>'),b('No. It follows the lease. Some leases add a percentage of sales above a breakpoint.','不能。按租约。有些租约在销售超过门槛后另加百分比。'),b('Grow sales so rent is a smaller share. Know your breakpoint.','提高销售，让租金占比变小。知道自己的门槛。')],
+  [b('<strong>Levy</strong>','<strong>外劳税</strong>'),b('No. It depends on work permit and S Pass heads, and is charged at one designated store.','不能。按工作准证和 S Pass 人数，由指定的一间店收取。'),b('Understand why it sits where it does; do not read it as that store being weak.','了解它为什么在那里，别误以为那间店表现差。')],
+  [b('<strong>Fixed salary</strong>','<strong>固定薪水</strong>'),b('Not in the short term.','短期内不能。'),b('Use the roster well: remove idle overlap and OT, keep service coverage.','排班要好：减少空闲重叠与加班，同时保持服务人手。')],
+  [b('<strong>Lease and depreciation</strong>','<strong>设备租赁与折旧</strong>'),b('No. Set when the equipment was bought or leased.','不能。在设备购买或租赁时已定。'),b('Keep equipment busy and well kept so it earns its cost.','让设备被充分使用并保养好，才对得起它的成本。')]]);
+ return tool
+ +'<div class="card"><h3>'+bi('WHAT YOU CAN AND CANNOT CONTROL','能控制与不能控制的')+'</h3>'+ct+'</div>'
+ +'<div class="card warn"><p>'+b('Judge a store on the lines it controls (waste, labour hours, sales). A high fixed cost percentage in a slow month is mostly a sales story, not a spending story.','评价门店要看它能控制的项目（损耗、人工时数、销售）。淡月固定成本占比高，多半是销售问题，不是乱花钱。')+'</p></div>';
+}
+function bind14(){
+ function upd(){
+  var ids=['f1','f2','f3','f4','f5','f6'],v=[],bad=false,i,raw;
+  for(i=0;i<6;i++){raw=$('#'+ids[i]).value.trim();if(raw===''||isNaN(+raw))bad=true;v.push(+raw);}
+  if(bad||v[0]<=0||v[1]<0||v[2]<0||v[3]<0||v[4]<0||v[5]<0||v[5]>99){$('#fe').style.display='block';return;}
+  $('#fe').style.display='none';
+  var fx=v[1]+v[2]+v[3]+v[4],be=fx/(1-v[5]/100),gap=v[0]-be;
+  $('#fk1').textContent='$'+fmt(fx);
+  $('#fk2').textContent=(Math.round(fx/v[0]*1000)/10)+'%';
+  $('#fk3').textContent='$'+fmt(be);
+  var k4=$('#fk4');k4.textContent=(gap>=0?'+$':'−$')+fmt(Math.abs(gap));k4.className=gap>=0?'pos':'neg';
+  var up=fx/(v[0]*1.1)*100;
+  $('#fd').textContent=(gap>=0?'Above break-even. 高于盈亏平衡。':'Below break-even: sales must rise or fixed cost must fall. 低于盈亏平衡：要提高销售或降低固定成本。')+' If sales rise 10%, fixed cost falls to '+(Math.round(up*10)/10)+'% of sales. 销售增加10%，固定成本占比降至'+(Math.round(up*10)/10)+'%。';
+ }
+ $('#fbox').addEventListener('input',upd);
+ $('#freset').addEventListener('click',function(){var d=[100000,15000,3000,12000,5000,68];for(var i=0;i<6;i++)$('#f'+(i+1)).value=d[i];upd();});
+ upd();
+}
+
 var ADV=[
 {k:'m9',adv:1,en:'Production plan: review and analysis',zh:'生产计划：如何检讨与分析',
  c:['A production plan says what to bake, how many, and when, for each SKU. Review it every day by comparing plan vs actual: produced, sold, waste and sold-out time.','生产计划决定每个SKU烤什么、烤多少、何时烤。每天用「计划 vs 实际」检讨：生产量、售出量、损耗和售罄时间。'],
@@ -522,7 +663,15 @@ var ADV=[
  a:['Check first. If it is a plain bulb, with no sign of danger and no wiring problem, staff can replace it safely with the right type. If there is flickering, a burning smell, tripping or damaged wiring, stop and call PM.','先检查。如果只是普通灯泡、没有危险迹象、也不是线路问题，员工可用正确规格的灯泡安全更换。若灯闪烁、有焦味、跳闸或电线破损，就停下来叫PM。'],
  ap:['For the last month of PM requests, mark each one: staff could have fixed it, or PM was needed. Share the pattern with your team and agree what staff may fix and what must go to PM.','把上个月的PM报修逐项标记：员工本可自己处理，还是确实需要PM。与团队分享结果，并共同确定哪些员工可以处理、哪些必须交给PM。'],
  pr:['Write one recent PM request, whether staff could have fixed it, the check you would do first, the safety condition, the owner and the date you will review it.','写出最近一项PM报修，员工是否可处理，你会先做什么检查，安全条件，负责人，以及何时复查。'],
- cap:['Check four questions before calling PM','叫PM之前先问四个问题'],x:x13,bind:bind13}
+ cap:['Check four questions before calling PM','叫PM之前先问四个问题'],x:x13,bind:bind13},
+{k:'m14',adv:1,en:'Fixed costs: rent, levy and more',zh:'固定成本：租金、外劳税等',
+ c:['Fixed costs, such as rent, levy, equipment lease, depreciation and fixed salary, stay at the same dollar amount whatever the sales. A store cannot change them in the short term, but it can understand them and plan around them. The only way to make them a smaller share of sales is to grow sales.','固定成本，例如租金、外劳税、设备租赁、折旧和固定薪水，不管销售多少，金额都不变。门店短期内改不了，但可以看懂并围绕它规划。要让它占销售的比例变小，只有提高销售。'],
+ e:['Illustrative: rent $20k and levy $4k. At sales $80k they are 25% and 5%. At sales $120k they are 16.7% and 3.3%. The dollars did not change.','示例：租金$20k、外劳税$4k。销售$80k时占25%和5%；销售$120k时占16.7%和3.3%。金额没有变。'],
+ q:['Rent is the same every month, yet the rent % changes. Why?','租金每个月都一样，为什么租金占比会变？'],
+ a:['Because the percentage is rent divided by sales. When sales go up the percentage goes down, and when sales go down the percentage goes up.','因为占比 = 租金 ÷ 销售。销售上升，占比下降；销售下降，占比上升。'],
+ ap:['List your store fixed costs and work out each as a % of sales for the last 3 months. Then note what share of your own results comes from sales, and what comes from the lines you control.','列出本店的固定成本，算出最近3个月各占销售的百分比。再看看你的结果有多少来自销售，有多少来自你能控制的项目。'],
+ pr:['Write your store fixed cost total, its % of sales, the break-even sales, and one action to lift sales or use staff hours better. Add an owner and a deadline.','写出本店固定成本合计、占销售的百分比、盈亏平衡销售，以及一项提高销售或更好运用人工时数的行动，并写上负责人和期限。'],
+ cap:['Illustrative: the same rent and levy dollars at two sales levels','示例：同样的租金和外劳税金额，在两个销售水平下的占比'],x:x14,bind:bind14}
 ];
 
 /* ---------- content ---------- */
@@ -611,7 +760,7 @@ function home(){
  var F=[['Net Sales = TC × AC','净销售 = 交易笔数 × 客单价'],['Gross Profit = Net Sales − COGS','毛利 = 净销售 − 销售成本'],['Operating Profit = Net Sales − COGS − Labour − Rent − Other','营运利润 = 销售 − 原料 − 人工 − 租金 − 其他费用'],['Operating Margin = Operating Profit ÷ Net Sales × 100%','营运利润率 = 营运利润 ÷ 净销售 × 100%'],['Prime Cost = COGS + Labour','主要成本 = 原料 + 人工'],['Break-even Sales = Fixed Costs ÷ Contribution Margin Ratio','盈亏平衡销售 = 固定成本 ÷ 边际贡献率']];
  var O=[['Read the profit report and calculate profit margin','读懂利润报表与利润率'],['Diagnose sales and cost variances','分析销售及成本差异'],['Build a realistic recovery plan','制定可执行扭亏方案'],['Assign actions with measurable KPIs','分配责任与可量化指标'],['Present a weekly management update','做每周管理汇报']];
  var h='<p class="eyebrow">KELVIN TEAM TRAINING · ILLUSTRATIVE</p><h2 class="title">Kelvin Team Training<br><span class="zh">Kelvin 团队培训</span></h2>'
- +'<div class="card"><p>'+b('From loss-making to profitable operations. Audience: RM · AM · SRM · BOH / FOH Leaders. 8 core modules, 5 advanced modules on production plans, deployment, COGS control and PM requests, a case study, Q&A, ownership and an assessment.','从亏损诊断到盈利改善。培训对象：RM、AM、SRM、BOH/FOH Leaders。含 8 个核心模块、5 个关于生产计划、调配、原料成本控制与PM报修的进阶模块、案例、课堂问答、责任分配和结业测验。')+'</p><div class="row"><button class="btn" data-go="m1">'+bi('Start module 01','开始模块 01')+' →</button></div></div>'
+ +'<div class="card"><p>'+b('From loss-making to profitable operations. Audience: RM · AM · SRM · BOH / FOH Leaders. 8 core modules, 6 advanced modules on production plans, deployment, COGS control, PM requests and fixed costs, a case study, Q&A, ownership and an assessment.','从亏损诊断到盈利改善。培训对象：RM、AM、SRM、BOH/FOH Leaders。含 8 个核心模块、6 个关于生产计划、调配、原料成本控制、PM报修与固定成本的进阶模块、案例、课堂问答、责任分配和结业测验。')+'</p><div class="row"><button class="btn" data-go="m1">'+bi('Start module 01','开始模块 01')+' →</button></div></div>'
  +'<div class="card"><h3>'+bi('LEARNING OUTCOMES','学习目标')+'</h3>'+O.map(function(o,i){return '<p style="margin:6px 0">'+(i+1)+'. '+bi(o[0],o[1])+'</p>';}).join('')+'</div>'
  +'<div class="card"><h3>'+bi('CORE PROFIT FORMULAS','核心公式')+'</h3>'+F.map(function(f){return '<span class="f">'+f[0]+'<br><span style="color:var(--mute)">'+f[1]+'</span></span>';}).join('')+'</div>'
  +'<div class="grid">'+M.map(function(m,i){return '<div class="card"><p class="eyebrow">'+eb(m,i)+'</p><p style="font-weight:600">'+m.en+'</p><p class="note">'+m.zh+'</p><div class="row"><button class="btn ghost" data-go="'+m.k+'">'+bi('Open','打开')+'</button></div></div>';}).join('')+'</div>'
@@ -622,6 +771,7 @@ function mod(m,i){
  var h='<p class="eyebrow">'+eb(m,i)+'</p><h2 class="title">'+m.en+' <br><span class="zh">'+m.zh+'</span></h2>'
  +(m.adv?ADVNOTE:'')+'<div class="card ill">'+ILL[m.k]()+'<p class="cap">'+bi(m.cap[0],m.cap[1])+'</p></div>'
  +'<div class="card"><h3>'+bi('LEARNING','学习重点 / 核心概念')+'</h3><p>'+b(m.c[0],m.c[1])+'</p></div>'
+ +(ILX[m.k]?'<div class="card ill">'+ILX[m.k].f()+'<p class="cap">'+bi(ILX[m.k].cap[0],ILX[m.k].cap[1])+'</p></div>':'')
  +'<div class="card ex"><h3>'+bi('WORKED EXAMPLE','计算例子')+'</h3><p class="big">'+b(m.e[0],m.e[1])+'</p></div>'
  +(m.x?m.x():'')+'<div class="card"><h3>'+bi('CLASS Q&A','课堂问答')+'</h3><p><strong>Q.</strong> '+b(m.q[0],m.q[1])+'</p><div class="row"><button class="btn ghost" data-rev="1">'+bi('Think first, then reveal','先想一想，再看答案')+'</button></div><div class="ans"><strong>A.</strong> '+b(m.a[0],m.a[1])+'</div></div>'
  +'<div class="card"><h3>'+bi('MANAGER APPLICATION','门店应用')+'</h3><p>'+b((m.ap||APPLY)[0],(m.ap||APPLY)[1])+'</p></div>'

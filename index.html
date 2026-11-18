@@ -401,12 +401,12 @@ function x12(){
  +'<div><label>'+bi('Backend adjustment','Backend 调整')+'</label><input type="number" id="g3" value="-500"></div>'
  +'<div><label>'+bi('ABC food cost','ABC 食材成本')+'</label><input type="number" min="0" id="g4" value="38000"></div>'
  +'<div><label>'+bi('General packaging','一般包装成本')+'</label><input type="number" min="0" id="g5" value="1500"></div>'
- +'<div><label>'+bi('Tolerance %','容许范围 %')+'</label><input type="number" min="0" step="0.1" id="g6" value="5"></div></div>'
+ +'<div><label>'+bi('Tolerance %','容许范围 %')+'</label><input type="number" min="0" step="0.1" id="g6" value="2"></div></div>'
  +'<div class="row"><button class="btn ghost" id="greset">'+bi('Reset to example','恢复示例')+'</button></div>'
  +'<div class="err" id="ge">'+bi('Enter numbers (usage, ABC, packaging and tolerance 0 or more; net sales above 0).','请输入数字（用量、ABC、包装、容许范围须大于或等于0；净销售须大于0）。')+'</div>'
  +'<div class="kpi"><div><span class="note">'+bi('MIA food cost','MIA 食材成本')+'</span><b id="gk1"></b></div><div><span class="note">'+bi('MIA FC %','MIA 成本率')+'</span><b id="gk2"></b></div><div><span class="note">'+bi('ABC FC %','ABC 成本率')+'</span><b id="gk3"></b></div><div><span class="note">'+bi('Variance','差额')+'</span><b id="gk4"></b></div><div><span class="note">'+bi('Variance %','差额占销售')+'</span><b id="gk5"></b></div></div>'
  +'<p class="note" id="gd"></p>'
- +'<p class="note" style="margin-top:6px">'+b('Tolerance is an example. Agree the right level with your RM and investigate any store above it.','容许范围仅为示例。请与RM商定合适的水平，超过的门店就要追查。')+'</p></div>';
+ +'<p class="note" style="margin-top:6px">'+b('Tolerance is 2% of net sales for this variance. It is not the outlet waste vs sales limit (5%). Investigate any store above it.','此差额的容许范围是净销售的2%。这不是门店损耗占销售的上限（5%）。超过的门店就要追查。')+'</p></div>';
  var rd=tbl([bi('Column in the MIA report','MIA 报表栏位'),bi('What it means','含义')],[
   [b('<strong>MIA Usage Cost</strong>','<strong>MIA 用量成本</strong>'),b('Usage cost from the MIA report.','MIA 报表里的用量成本。')],
   [b('<strong>Backend Cost Adjustment / Allocation / Other</strong>','<strong>Backend 调整 / 分摊 / 其他</strong>'),b('Added to the usage cost (often a negative adjustment).','加到用量成本上（调整常为负数）。')],
@@ -420,7 +420,7 @@ function x12(){
   [b('<strong>Rejected item, no record</strong>','<strong>报废没有记录</strong>'),b('A customer drops a bread and staff throw it in the bin straight away. It left stock but is not in the waste log.','顾客把面包掉在地上，员工直接丢进垃圾桶，货没了，但损耗记录里没有。'),b('Record every discard at the moment it happens, with item, quantity and reason. Rule: nothing goes in the bin without a record.','每次丢弃当场记录：品项、数量、原因。规则：没记录就不能丢进垃圾桶。')],
   [b('<strong>Staff meal, no record</strong>','<strong>员工餐没有记录</strong>'),b('Staff take items to eat without a record. The stock is used, but no sale and no waste show it.','员工拿货吃但没记录，库存用掉了，却没有销售也没有损耗记录。'),b('Set a staff meal rule (what, how many, who approves) and record each one in a staff meal log.','定员工餐规定（可吃什么、数量、谁批准），每次登记员工餐记录。')]]);
  return tool
- +'<div class="card"><h3>'+bi('HOW TO READ THE MIA REPORT','怎么读 MIA 报表')+'</h3>'+rd+'</div>'
+ +'<div class="card"><h3>'+bi('HOW TO READ THE MIA (MONTHLY INVENTORY ANALYSIS) REPORT','怎么读 MIA（月度库存分析）报表')+'</h3>'+rd+'</div>'
  +'<div class="card"><h3>'+bi('HOW THE VARIANCE IS BUILT','差额是怎么算出来的')+'</h3>'+vr+'</div>'
  +'<div class="card"><h3>'+bi('THREE COMMON LEAKS AND HOW TO CLOSE THEM','三个常见漏洞与堵法')+'</h3>'+lk+'</div>'
  +'<div class="card warn"><p>'+b('Guardrail: do not hide the variance by under-recording waste or by cutting staff meals unfairly. The goal is to make loss visible so you can act on it.','底线：不要靠少记损耗来掩盖差额，也不要不合理地取消员工餐。目标是让损耗看得见，才能处理。')+'</p></div>';
@@ -440,7 +440,7 @@ function bind12(){
   $('#gd').textContent=vp>v[5]?'Above tolerance: investigate stock count, binned items without a record and staff meals. 超出容许范围：追查盘点、没记录的丢弃与员工餐。':(vp<0?'Variance below zero: recheck the MIA adjustment and the ABC figure. 差额为负：请核对 MIA 调整与 ABC 数字。':'Within tolerance. Keep the controls running. 在容许范围内，继续保持控制措施。');
  }
  $('#cbox').addEventListener('input',upd);
- $('#greset').addEventListener('click',function(){var d=[100000,43500,-500,38000,1500,5];for(var i=0;i<6;i++)$('#g'+(i+1)).value=d[i];upd();});
+ $('#greset').addEventListener('click',function(){var d=[100000,43500,-500,38000,1500,2];for(var i=0;i<6;i++)$('#g'+(i+1)).value=d[i];upd();});
  upd();
 }
 
@@ -504,7 +504,7 @@ var ADV=[
  pr:['Fill a day-type matrix for one SKU group: day type, demand index, planned quantity, owner, and how you will review it weekly.','为一个SKU组填写日型矩阵：日型、需求指数、计划量、负责人，以及每周如何检讨。'],
  cap:['Live chart: one flat plan across a week (change the sliders below)','实时图：一周内使用同一份固定计划（调整下方滑块）'],x:x11,bind:bind11},
 {k:'m12',adv:1,en:'COGS: ABC vs MIA',zh:'原料成本：ABC 对比 MIA',
- c:['MIA is the food cost in the P&L report: usage cost plus backend adjustments. ABC is the real food cost, worked out from stock orders and the stock balance. Variance = MIA − ABC − general packaging. A growing variance means cost that the two reports do not explain.','MIA 是损益报表里的食材成本：用量成本加 backend 调整。ABC 是真实食材成本，由订货量和库存结余算出。差额 = MIA − ABC − 一般包装成本。差额变大，代表有成本是两份报表都解释不了的。'],
+ c:['MIA (Monthly Inventory Analysis) is the monthly food cost report on the P&L side: usage cost plus backend adjustments. ABC is the real food cost, worked out from stock orders and the stock balance. Variance = MIA − ABC − general packaging. A growing variance means cost that the two reports do not explain.','MIA（Monthly Inventory Analysis，月度库存分析）是损益端的每月食材成本报表：用量成本加 backend 调整。ABC 是真实食材成本，由订货量和库存结余算出。差额 = MIA − ABC − 一般包装成本。差额变大，代表有成本是两份报表都解释不了的。'],
  e:['Illustrative: sales $100,000; MIA food cost $43,000 (43%); ABC $38,000 (38%); packaging $1,500. Variance = 43,000 − 38,000 − 1,500 = $3,500 = 3.5% of sales.','示例：销售$100,000；MIA 食材成本$43,000（43%）；ABC $38,000（38%）；包装$1,500。差额 = 43,000 − 38,000 − 1,500 = $3,500，占销售3.5%。'],
  q:['A store shows a low recorded wastage cost, but its variance is above the others. Where do you look?','某门店已记录的损耗不高，但差额比其他门店大，应该查哪里？'],
  a:['Look for stock that left without a record: items binned with no entry (for example a dropped bread), staff meals, and stock count errors. Check that the stock inventory counts the same items each month.','查没有记录就离开库存的东西：没登记就丢掉的货（例如掉在地上的面包）、员工餐、盘点错误。并确认每月库存盘点包含的物品一致。'],

@@ -364,6 +364,111 @@ function bind11(){
  upd();
 }
 
+/* M12 illustration: P&L COGS vs system record */
+ILL.m12=function(){
+ var k=400/45000,x=40,s='',i;
+ var segs=[[41500,C.sky],[1500,C.crust],[2000,C.red]];
+ s+=T(40,10,'P&L COGS = opening + purchases − closing = $45,000',{a:'start',s:11,c:C.mute});
+ segs.forEach(function(g){var w=g[0]*k;s+=R(x,20,w,30,g[1],'',2);x+=w;});
+ s+=T(40,70,'System record 系统记录 = $43,000',{a:'start',s:11,c:C.mute});
+ x=40;
+ for(i=0;i<2;i++){var w2=segs[i][0]*k;s+=R(x,80,w2,30,segs[i][1],'',2);x+=w2;}
+ s+=R(x,80,2000*k,30,'none',C.red,2);
+ s+=T(470,128,'Gap $2,000 not in the system 差额未记录',{a:'end',s:12,w:600,c:C.red});
+ var ly=152;
+ s+=R(40,ly-5,12,10,C.sky,'',2)+T(56,ly,'Theory usage 理论用量',{a:'start',s:11})
+ +R(190,ly-5,12,10,C.crust,'',2)+T(206,ly,'Recorded waste 已记录损耗',{a:'start',s:11})
+ +R(350,ly-5,12,10,C.red,'',2)+T(366,ly,'Gap 差额',{a:'start',s:11});
+ return SV(168,s,'P&L COGS of 45000 against 43000 explained by the system, leaving a 2000 gap');};
+
+/* M13 illustration: PM triage */
+ILL.m13=function(){
+ var s=R(8,30,92,44,C.crustL,C.crust)+T(54,46,'Issue',{w:600,s:12})+T(54,62,'发现问题',{s:11,c:C.mute})
+ +arrow(102,52,124,52)
+ +R(126,24,124,56,C.skyL,C.sky)+T(188,42,'Check first',{w:600,s:12})+T(188,58,'先检查 4 个问题',{s:11,c:C.mute})
+ +'<path d="M252 52 L270 24" stroke="'+C.mute+'" fill="none"/><path d="M252 52 L270 90" stroke="'+C.mute+'" fill="none"/>'
+ +R(272,6,200,38,C.leafL,C.leaf)+T(372,20,'Safe and simple: staff fix',{w:600,s:12,c:'#2f4f20'})+T(372,35,'安全简单：员工自己处理',{s:11,c:'#2f4f20'})
+ +R(272,70,200,38,C.redL,C.red)+T(372,84,'Not safe / licensed: call PM',{w:600,s:12,c:'#6b2214'})+T(372,99,'不安全或需专业：叫PM',{s:11,c:'#6b2214'})
+ +T(240,132,'Example 例子: dead bulb = staff buy and change 灯泡 = 自己买自己换',{s:12,c:C.mute});
+ return SV(146,s,'Check four questions first; safe and simple jobs are fixed by staff, others go to PM');};
+
+/* M12 extras */
+function x12(){
+ var tool='<div class="card" id="cbox"><h3>'+bi('TRY IT: how big is the unrecorded gap?','动手试试：未记录的差额有多大？')+'</h3>'
+ +'<p class="note">'+b('Use one month of your own figures (SGD). The example values update as you type.','用你门店一个月的数字（新币）。输入时结果会即时更新。')+'</p>'
+ +'<div class="hr" style="margin-top:8px">'
+ +'<div><label>'+bi('Opening stock','期初库存')+'</label><input type="number" min="0" id="g1" value="12000"></div>'
+ +'<div><label>'+bi('Purchases','本月采购')+'</label><input type="number" min="0" id="g2" value="46000"></div>'
+ +'<div><label>'+bi('Closing stock','期末库存')+'</label><input type="number" min="0" id="g3" value="13000"></div>'
+ +'<div><label>'+bi('Theory usage','理论用量')+'</label><input type="number" min="0" id="g4" value="41500"></div>'
+ +'<div><label>'+bi('Recorded waste','已记录损耗')+'</label><input type="number" min="0" id="g5" value="1500"></div>'
+ +'<div><label>'+bi('Net sales','净销售')+'</label><input type="number" min="1" id="g6" value="100000"></div></div>'
+ +'<div class="row"><button class="btn ghost" id="greset">'+bi('Reset to example','恢复示例')+'</button></div>'
+ +'<div class="err" id="ge">'+bi('Enter numbers of 0 or more, and net sales above 0.','请输入大于或等于0的数字，净销售须大于0。')+'</div>'
+ +'<div class="kpi"><div><span class="note">'+bi('P&L COGS','损益表原料成本')+'</span><b id="gk1"></b></div><div><span class="note">'+bi('Explained by system','系统可解释')+'</span><b id="gk2"></b></div><div><span class="note">'+bi('Unrecorded gap','未记录差额')+'</span><b id="gk3"></b></div><div><span class="note">'+bi('Gap % of sales','差额占销售')+'</span><b id="gk4"></b></div></div>'
+ +'<p class="note" id="gd"></p>'
+ +'<p class="note" style="margin-top:6px">'+b('Theory usage = units sold × recipe cost. A small gap is normal (trimming, cooking loss). Agree a tolerance with your RM and investigate when the gap is above it.','理论用量 = 销售数量 × 配方成本。少量差额正常（修边、烹制损耗）。与RM定一个容许范围，超出就追查。')+'</p></div>';
+ var lk=tbl([bi('Where it leaks','漏在哪里'),bi('Example','例子'),bi('Control','控制方法')],[
+  [b('<strong>Stock count</strong>','<strong>库存盘点</strong>'),b('Wrong or missing items in the count change closing stock and so change COGS.','盘点漏项或数错，会改变期末库存，进而改变原料成本。'),b('Agree which items are counted; count the same time and the same way every month; two people check.','先说明哪些物品计入库存；每月同一时间、同一方法盘点；两人核对。')],
+  [b('<strong>Rejected item, no record</strong>','<strong>报废没有记录</strong>'),b('A customer drops a bread and staff throw it in the bin straight away. It left stock but is not in the waste log.','顾客把面包掉在地上，员工直接丢进垃圾桶，货没了，但损耗记录里没有。'),b('Record every discard at the moment it happens, with item, quantity and reason. A waste bin rule: nothing goes in without a record.','每次丢弃当场记录：品项、数量、原因。垃圾桶规则：没记录就不能丢。')],
+  [b('<strong>Staff meal, no record</strong>','<strong>员工餐没有记录</strong>'),b('Staff take items to eat without a record. It is usage, but the system sees no sale and no waste.','员工拿货吃但没记录，对系统来说既没销售也没损耗，却是真实用量。'),b('Set a staff meal rule (what, how many, who approves) and record each one in a staff meal log.','定员工餐规定（可吃什么、数量、谁批准），每次登记员工餐记录。')],
+  [b('<strong>Over-portioning, trimming</strong>','<strong>份量过多、修边</strong>'),b('Using more than the recipe. It is in sales, so it shows up as usage above theory.','用量超过配方，销售照常，所以表现为实际用量高于理论值。'),b('Spot-check portions and recipe adherence; coach BOH.','抽查份量与配方执行；辅导BOH。')]]);
+ return tool
+ +'<div class="card"><h3>'+bi('WHAT P&L COGS INCLUDES (SPECIFY IT)','损益表原料成本包括什么（要说明清楚）')+'</h3><p>'+b('P&L COGS is stock based: opening stock plus purchases minus closing stock. Write down exactly which items are inside the stock count (ingredients, packaging, finished goods) so everyone reads the number the same way.','损益表原料成本以库存为基础：期初库存加采购减期末库存。要写清楚库存盘点包含哪些物品（原料、包装、成品），这样大家读同一个数字才有同样的理解。')+'</p></div>'
+ +'<div class="card"><h3>'+bi('THREE COMMON LEAKS AND HOW TO CLOSE THEM','三个常见漏洞与堵法')+'</h3>'+lk+'</div>'
+ +'<div class="card warn"><p>'+b('Guardrail: do not hide the gap by under-recording waste or by cutting staff meals unfairly. The goal is to make loss visible so you can act on it.','底线：不要靠少记损耗来掩盖差额，也不要不合理地取消员工餐。目标是让损耗看得见，才能处理。')+'</p></div>';
+}
+function bind12(){
+ function upd(){
+  var ids=['g1','g2','g3','g4','g5','g6'],v=[],bad=false,i,raw;
+  for(i=0;i<6;i++){raw=$('#'+ids[i]).value.trim();if(raw===''||isNaN(+raw)||+raw<0)bad=true;v.push(+raw);}
+  if(bad||v[5]<=0){$('#ge').style.display='block';return;}
+  $('#ge').style.display='none';
+  var cogs=v[0]+v[1]-v[2],exp=v[3]+v[4],gap=cogs-exp,gp=gap/v[5]*100;
+  $('#gk1').textContent='$'+fmt(cogs);$('#gk2').textContent='$'+fmt(exp);
+  var g3=$('#gk3');g3.textContent=(gap>0?'$':gap<0?'−$':'$')+fmt(Math.abs(gap));g3.className=gap>0?'neg':'';
+  $('#gk4').textContent=(Math.round(gp*10)/10)+'%';
+  $('#gd').textContent=cogs<0?'Closing stock is higher than opening stock plus purchases: please recheck the stock count. 期末库存高于期初加采购，请重新核对盘点。':(gap>0?'Gap above zero: more stock left than the system explains. Check count, binned items and staff meals. 差额为正：实际用掉的比系统解释的多，查盘点、直接丢弃与员工餐。':(gap<0?'Gap below zero: the system explains more than P&L COGS. Recheck theory usage and the stock count. 差额为负：系统解释的比损益表多，请核对理论用量与盘点。':'No gap. 没有差额。'));
+ }
+ $('#cbox').addEventListener('input',upd);
+ $('#greset').addEventListener('click',function(){var d=[12000,46000,13000,41500,1500,100000];for(var i=0;i<6;i++)$('#g'+(i+1)).value=d[i];upd();});
+ upd();
+}
+
+/* M13 extras */
+function x13(){
+ var qs=[['Does it involve wiring, gas, water supply, a ladder above a safe height, or structure?','涉及电线、煤气、供水、过高的梯子或建筑结构吗？'],
+  ['Is there any risk of shock, fire, burn, fall or injury?','有触电、火灾、烫伤、跌倒或受伤风险吗？'],
+  ['Does it need a tool, part or qualification that staff do not have?','需要员工没有的工具、零件或资格吗？'],
+  ['Is it under warranty, or the landlord or mall responsibility?','是否在保修期内，或属于业主、商场的责任？']];
+ var tool='<div class="card" id="pbox"><h3>'+bi('TRY IT: should we call PM?','动手试试：该不该叫PM？')+'</h3>'
+ +'<p class="note">'+b('Tick Yes for each question that applies, and the suggestion updates.','每个问题如果答案是「是」就打勾，建议会随之变化。')+'</p>'
+ +qs.map(function(q,i){return '<label style="display:flex;gap:10px;align-items:flex-start;margin:8px 0;font-size:14px;cursor:pointer"><input type="checkbox" id="p'+(i+1)+'" style="margin-top:4px;width:18px;height:18px"><span>'+b(q[0],q[1])+'</span></label>';}).join('')
+ +'<div class="res" id="pr" style="display:block"></div></div>';
+ var ex=tbl([bi('Usually staff can handle (when safe)','通常员工可处理（在安全的前提下）'),bi('Call PM','叫PM处理')],[
+  [b('Change a bulb of the same type: power off, stable step, dry area, correct rating. Buy it as a small purchase with receipt.','换同规格灯泡：先断电、站稳、地面干燥、规格正确；小额采购并保留收据。'),b('Flickering lights, burning smell, tripping power, exposed or damaged wiring.','灯一直闪烁、有焦味、跳闸、电线外露或破损。')],
+  [b('Tighten a loose handle or shelf screw, replace a missing cabinet knob.','拧紧松掉的把手或层板螺丝、补上缺失的柜子拉手。'),b('Water leaks, blocked drains, gas smell, aircon not cooling, door or lock failure.','漏水、排水堵塞、煤气味、冷气不冷、门或锁故障。')],
+  [b('Wipe, clean or reset (for example a tripped switch once, with no sign of danger).','擦拭、清洁或重置（例如只跳闸一次，且没有危险迹象）。'),b('Anything near the equipment warranty, fire safety, or a landlord-owned area.','涉及设备保修、消防安全或业主负责的区域。')]]);
+ var an=tbl([bi('Measure','指标'),bi('What it tells you','说明什么')],[
+  [b('PM requests per month, by cause','每月PM报修数量，按原因分类'),b('Where problems repeat','哪些问题在重复')],
+  [b('% of requests that staff could have fixed','员工本可自己处理的占比'),b('Whether the triage check is working','先检查的做法是否有效')],
+  [b('Time from request to fix, and cost','从报修到修好的时间与费用'),b('Whether PM time is used on the right jobs','PM的时间是否花在对的事上')]]);
+ return tool
+ +'<div class="card"><h3>'+bi('EXAMPLES','例子对照')+'</h3>'+ex+'</div>'
+ +'<div class="card"><h3>'+bi('REVIEW THE PM LOG (RM, weekly)','检讨PM记录（RM，每周）')+'</h3>'+an+'</div>'
+ +'<div class="card warn"><p>'+b('Safety first. Staff only do a fix when it is reasonable and safe, and follow the company safety rules. If you are not sure, stop and call PM. Never touch wiring, gas or water supply.','安全第一。员工只在合理且安全时才自己处理，并遵守公司安全规定。不确定就停下来叫PM。绝不触碰电线、煤气或供水。')+'</p></div>';
+}
+function bind13(){
+ function upd(){
+  var a=$('#p1').checked||$('#p2').checked||$('#p3').checked,w=$('#p4').checked,r=$('#pr');
+  if(a){r.className='res no';r.innerHTML='<strong>'+bi('Call PM','叫PM')+'</strong> — '+b('Do not attempt it. Make the area safe, stop using the item, and raise a PM request with a photo.','不要自己处理。先确保现场安全、停止使用，并附照片提交PM报修。');}
+  else if(w){r.className='res no';r.innerHTML='<strong>'+bi('Report it','先上报')+'</strong> — '+b('Raise it through the warranty, landlord or mall route so you do not lose cover. Keep a photo.','通过保修、业主或商场的渠道报修，避免失去保障。保留照片。');}
+  else{r.className='res ok';r.innerHTML='<strong>'+bi('Staff can fix it','员工可自己处理')+'</strong> — '+b('Do it safely, use a small purchase with receipt, and note it in the maintenance log.','在安全的前提下处理，小额采购并保留收据，并记在维修记录里。');}
+ }
+ $('#pbox').addEventListener('change',upd);
+ upd();
+}
+
 var ADV=[
 {k:'m9',adv:1,en:'Production plan: review and analysis',zh:'生产计划：如何检讨与分析',
  c:['A production plan says what to bake, how many, and when, for each SKU. Review it every day by comparing plan vs actual: produced, sold, waste and sold-out time.','生产计划决定每个SKU烤什么、烤多少、何时烤。每天用「计划 vs 实际」检讨：生产量、售出量、损耗和售罄时间。'],
@@ -388,7 +493,23 @@ var ADV=[
  a:['High waste on weak days, early sell-outs on strong days, a plan that does not move with sales, and COGS % above target. Average waste can look fine because the two problems cancel out.','弱势日损耗高、强势日提早售罄、计划不随销售变动、原料率高于目标。平均损耗可能看起来正常，因为两种问题在平均数里互相抵消。'],
  ap:['Ask each store: do you use the same plan every day? Collect planned quantity by weekday for 4 weeks and compare with sales by weekday. Red flag if the plan varies much less than sales.','问每间门店：是否每天用同一份计划？收集4周按星期几的计划量，对比按星期几的销售。计划变化远小于销售变化即为警示。'],
  pr:['Fill a day-type matrix for one SKU group: day type, demand index, planned quantity, owner, and how you will review it weekly.','为一个SKU组填写日型矩阵：日型、需求指数、计划量、负责人，以及每周如何检讨。'],
- cap:['Live chart: one flat plan across a week (change the sliders below)','实时图：一周内使用同一份固定计划（调整下方滑块）'],x:x11,bind:bind11}
+ cap:['Live chart: one flat plan across a week (change the sliders below)','实时图：一周内使用同一份固定计划（调整下方滑块）'],x:x11,bind:bind11},
+{k:'m12',adv:1,en:'COGS: system record vs P&L',zh:'原料成本：系统记录 vs 损益表',
+ c:['P&L COGS = opening stock + purchases − closing stock. It counts everything that physically left stock, recorded or not. The system only knows what staff recorded. The difference is unrecorded loss that you pay for but cannot see.','损益表原料成本 = 期初库存 + 采购 − 期末库存，计算所有实际用掉的货，无论有没有记录。系统只知道员工记录过的部分，两者的差额就是看不见、却要付钱的未记录损耗。'],
+ e:['Illustrative: P&L COGS $45,000; theory usage $41,500 + recorded waste $1,500 = $43,000 explained; gap $2,000 = 2.0% of $100,000 sales.','示例：损益表原料成本$45,000；理论用量$41,500加已记录损耗$1,500 = $43,000；差额$2,000，占销售$100,000的2.0%。'],
+ q:['Recorded waste is low and looks fine, but COGS % is above target. Where do you look?','已记录损耗不高，但原料率高于目标，应该查哪里？'],
+ a:['Look for what is not in the system: items binned without a record, staff meals, stock count errors, and over-portioning. Compare P&L COGS with theory usage plus recorded waste; the gap is where to investigate.','查系统以外的部分：没记录就丢掉的货、员工餐、盘点错误、份量过多。把损益表原料成本与「理论用量加已记录损耗」对比，差额就是要追查的地方。'],
+ ap:['Pull last month: opening stock, purchases, closing stock, theory usage and recorded waste. Work out the gap and list the three most likely leaks in your store with an owner for each.','提取上个月的期初库存、采购、期末库存、理论用量和已记录损耗，算出差额，列出本店最可能的三个漏洞，并各指定负责人。'],
+ pr:['Write the gap, the likely leak, one control (for example record every discard when it happens), the owner and a deadline. Check the gap again next month.','写出差额、可能的漏洞、一项控制措施（例如每次丢弃当场记录）、负责人和期限。下个月再核对差额。'],
+ cap:['Illustrative: what the P&L counts vs what the system knows','示例：损益表计入的 vs 系统知道的'],x:x12,bind:bind12},
+{k:'m13',adv:1,en:'PM requests: check before you call',zh:'PM报修：先检查，再通知',
+ c:['Property maintenance (PM) is for problems staff cannot fix safely or properly. Before raising a request, check the cause. Many small jobs, such as changing a bulb, can be done by staff safely with a small purchase. Calling PM without checking wastes their time and the store waits longer.','PM用于员工无法安全或妥善处理的问题。报修前先检查原因。很多小事，例如换灯泡，员工在安全的前提下用小额采购就能完成。没检查就叫PM，既浪费PM时间，门店也要等更久。'],
+ e:['Illustrative: the PM team was called for a dead light, and the job was only to change a bulb that staff could have bought and fitted in minutes.','示例：灯不亮就叫PM团队来，结果只是换一个灯泡，其实员工几分钟就能买来换好。'],
+ q:['A light is out. Should we raise a PM request straight away?','有一盏灯不亮，要不要马上提交PM报修？'],
+ a:['Check first. If it is a plain bulb, with no sign of danger and no wiring problem, staff can replace it safely with the right type. If there is flickering, a burning smell, tripping or damaged wiring, stop and call PM.','先检查。如果只是普通灯泡、没有危险迹象、也不是线路问题，员工可用正确规格的灯泡安全更换。若灯闪烁、有焦味、跳闸或电线破损，就停下来叫PM。'],
+ ap:['For the last month of PM requests, mark each one: staff could have fixed it, or PM was needed. Share the pattern with your team and agree what staff may fix and what must go to PM.','把上个月的PM报修逐项标记：员工本可自己处理，还是确实需要PM。与团队分享结果，并共同确定哪些员工可以处理、哪些必须交给PM。'],
+ pr:['Write one recent PM request, whether staff could have fixed it, the check you would do first, the safety condition, the owner and the date you will review it.','写出最近一项PM报修，员工是否可处理，你会先做什么检查，安全条件，负责人，以及何时复查。'],
+ cap:['Check four questions before calling PM','叫PM之前先问四个问题'],x:x13,bind:bind13}
 ];
 
 /* ---------- content ---------- */
@@ -477,7 +598,7 @@ function home(){
  var F=[['Net Sales = TC × AC','净销售 = 交易笔数 × 客单价'],['Gross Profit = Net Sales − COGS','毛利 = 净销售 − 销售成本'],['Operating Profit = Net Sales − COGS − Labour − Rent − Other','营运利润 = 销售 − 原料 − 人工 − 租金 − 其他费用'],['Operating Margin = Operating Profit ÷ Net Sales × 100%','营运利润率 = 营运利润 ÷ 净销售 × 100%'],['Prime Cost = COGS + Labour','主要成本 = 原料 + 人工'],['Break-even Sales = Fixed Costs ÷ Contribution Margin Ratio','盈亏平衡销售 = 固定成本 ÷ 边际贡献率']];
  var O=[['Read P&L and calculate profit margin','读懂损益表与利润率'],['Diagnose sales and cost variances','分析销售及成本差异'],['Build a realistic recovery plan','制定可执行扭亏方案'],['Assign actions with measurable KPIs','分配责任与可量化指标'],['Present a weekly management update','做每周管理汇报']];
  var h='<p class="eyebrow">KELVIN TEAM TRAINING · ILLUSTRATIVE</p><h2 class="title">Kelvin Team Training<br><span class="zh">Kelvin 团队培训</span></h2>'
- +'<div class="card"><p>'+b('From loss-making to profitable operations. Audience: RM · AM · SRM · BOH / FOH Leaders. 8 core modules, 3 advanced modules on production plans and deployment, a case study, Q&A, ownership and an assessment.','从亏损诊断到盈利改善。培训对象：RM、AM、SRM、BOH/FOH Leaders。含 8 个核心模块、3 个关于生产计划与调配的进阶模块、案例、课堂问答、责任分配和结业测验。')+'</p><div class="row"><button class="btn" data-go="m1">'+bi('Start module 01','开始模块 01')+' →</button></div></div>'
+ +'<div class="card"><p>'+b('From loss-making to profitable operations. Audience: RM · AM · SRM · BOH / FOH Leaders. 8 core modules, 5 advanced modules on production plans, deployment, COGS control and PM requests, a case study, Q&A, ownership and an assessment.','从亏损诊断到盈利改善。培训对象：RM、AM、SRM、BOH/FOH Leaders。含 8 个核心模块、5 个关于生产计划、调配、原料成本控制与PM报修的进阶模块、案例、课堂问答、责任分配和结业测验。')+'</p><div class="row"><button class="btn" data-go="m1">'+bi('Start module 01','开始模块 01')+' →</button></div></div>'
  +'<div class="card"><h3>'+bi('LEARNING OUTCOMES','学习目标')+'</h3>'+O.map(function(o,i){return '<p style="margin:6px 0">'+(i+1)+'. '+bi(o[0],o[1])+'</p>';}).join('')+'</div>'
  +'<div class="card"><h3>'+bi('CORE P&L FORMULAS','核心公式')+'</h3>'+F.map(function(f){return '<span class="f">'+f[0]+'<br><span style="color:var(--mute)">'+f[1]+'</span></span>';}).join('')+'</div>'
  +'<div class="grid">'+M.map(function(m,i){return '<div class="card"><p class="eyebrow">'+eb(m,i)+'</p><p style="font-weight:600">'+m.en+'</p><p class="note">'+m.zh+'</p><div class="row"><button class="btn ghost" data-go="'+m.k+'">'+bi('Open','打开')+'</button></div></div>';}).join('')+'</div>'

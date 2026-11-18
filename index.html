@@ -368,9 +368,9 @@ function bind11(){
 ILL.m12=function(){
  var k=400/43000,x=40,s='',i;
  var segs=[[38000,C.sky],[1500,C.crust],[3500,C.red]];
- s+=T(40,10,'MIA food cost (P&L side) = $43,000 (43% of sales)',{a:'start',s:11,c:C.mute});
+ s+=T(40,10,'MIA food cost (finance report) = $43,000 (43% of sales)',{a:'start',s:11,c:C.mute});
  s+=R(40,20,400,30,C.skyL,C.sky,2);
- s+=T(240,35,'MIA 损益表端',{s:12,w:600});
+ s+=T(240,35,'MIA 财务报表端',{s:12,w:600});
  s+=T(40,70,'ABC (real FC) + packaging, then what is left 剩下的差额',{a:'start',s:11,c:C.mute});
  segs.forEach(function(g){var w=g[0]*k;s+=R(x,80,w,30,g[1],'',2);x+=w;});
  s+=T(470,128,'Variance = MIA − ABC − packaging = $3,500 (3.5%)',{a:'end',s:12,w:600,c:C.red});
@@ -417,8 +417,8 @@ function x12(){
   [b('<strong>Variance</strong>','<strong>差额</strong>'),b('MIA Food Cost − ABC − General Packaging. Variance % = variance ÷ net sales.','MIA 食材成本 − ABC − 一般包装成本。差额% = 差额 ÷ 净销售。')]]);
  var lk=tbl([bi('Where it leaks','漏在哪里'),bi('Example','例子'),bi('Control','控制方法')],[
   [b('<strong>Stock inventory</strong>','<strong>库存盘点</strong>'),b('Wrong or missing items in the stock count change the balance and so change the cost.','盘点漏项或数错，会改变库存结余，进而改变成本。'),b('Specify which items are counted in stock inventory; count at the same time and the same way every month; two people check.','说明哪些物品计入库存；每月同一时间、同一方法盘点；两人核对。')],
-  [b('<strong>Rejected item, no record</strong>','<strong>报废没有记录</strong>'),b('A customer drops a bread and staff throw it in the bin straight away. It left stock but is not in the waste log.','顾客把面包掉在地上，员工直接丢进垃圾桶，货没了，但损耗记录里没有。'),b('Record every discard at the moment it happens, with item, quantity and reason. Rule: nothing goes in the bin without a record.','每次丢弃当场记录：品项、数量、原因。规则：没记录就不能丢进垃圾桶。')],
-  [b('<strong>Staff meal, no record</strong>','<strong>员工餐没有记录</strong>'),b('Staff take items to eat without a record. The stock is used, but no sale and no waste show it.','员工拿货吃但没记录，库存用掉了，却没有销售也没有损耗记录。'),b('Set a staff meal rule (what, how many, who approves) and record each one in a staff meal log.','定员工餐规定（可吃什么、数量、谁批准），每次登记员工餐记录。')]]);
+  [b('<strong>Rejected item, no record (food cost only)</strong>','<strong>报废没有记录（仅食材成本）</strong>'),b('A customer drops a bread and staff throw it in the bin straight away. It left stock but is not in the waste log. This is food cost only, not packaging.','顾客把面包掉在地上，员工直接丢进垃圾桶，货没了，但损耗记录里没有。这只影响食材成本，不影响包装。'),b('Record every discard at the moment it happens, with item, quantity and reason. Rule: nothing goes in the bin without a record.','每次丢弃当场记录：品项、数量、原因。规则：没记录就不能丢进垃圾桶。')],
+  [b('<strong>Staff meal, no record (food cost only)</strong>','<strong>员工餐没有记录（仅食材成本）</strong>'),b('Staff take items to eat without a record. The stock is used, but no sale and no waste show it. This is food cost only, not packaging.','员工拿货吃但没记录，库存用掉了，却没有销售也没有损耗记录。这只影响食材成本，不影响包装。'),b('Set a staff meal rule (what, how many, who approves) and record each one in a staff meal log.','定员工餐规定（可吃什么、数量、谁批准），每次登记员工餐记录。')]]);
  return tool
  +'<div class="card"><h3>'+bi('HOW TO READ THE MIA (MONTHLY INVENTORY ANALYSIS) REPORT','怎么读 MIA（月度库存分析）报表')+'</h3>'+rd+'</div>'
  +'<div class="card"><h3>'+bi('HOW THE VARIANCE IS BUILT','差额是怎么算出来的')+'</h3>'+vr+'</div>'
@@ -504,7 +504,7 @@ var ADV=[
  pr:['Fill a day-type matrix for one SKU group: day type, demand index, planned quantity, owner, and how you will review it weekly.','为一个SKU组填写日型矩阵：日型、需求指数、计划量、负责人，以及每周如何检讨。'],
  cap:['Live chart: one flat plan across a week (change the sliders below)','实时图：一周内使用同一份固定计划（调整下方滑块）'],x:x11,bind:bind11},
 {k:'m12',adv:1,en:'COGS: ABC vs MIA',zh:'原料成本：ABC 对比 MIA',
- c:['MIA (Monthly Inventory Analysis) is the monthly food cost report on the P&L side: usage cost plus backend adjustments. ABC is the real food cost, worked out from stock orders and the stock balance. Variance = MIA − ABC − general packaging. A growing variance means cost that the two reports do not explain.','MIA（Monthly Inventory Analysis，月度库存分析）是损益端的每月食材成本报表：用量成本加 backend 调整。ABC 是真实食材成本，由订货量和库存结余算出。差额 = MIA − ABC − 一般包装成本。差额变大，代表有成本是两份报表都解释不了的。'],
+ c:['MIA (Monthly Inventory Analysis) is the monthly food cost report in the finance report: usage cost plus backend adjustments. ABC is the real food cost, worked out from stock orders and the stock balance. Variance = MIA − ABC − general packaging. Dropped-and-binned items and staff meals count as food cost only, not packaging. A growing variance means cost that the two reports do not explain.','MIA（Monthly Inventory Analysis，月度库存分析）是财务报表里的每月食材成本报表：用量成本加 backend 调整。ABC 是真实食材成本，由订货量和库存结余算出。差额 = MIA − ABC − 一般包装成本。掉地丢弃和员工餐只算食材成本，不算包装。差额变大，代表有成本是两份报表都解释不了的。'],
  e:['Illustrative: sales $100,000; MIA food cost $43,000 (43%); ABC $38,000 (38%); packaging $1,500. Variance = 43,000 − 38,000 − 1,500 = $3,500 = 3.5% of sales.','示例：销售$100,000；MIA 食材成本$43,000（43%）；ABC $38,000（38%）；包装$1,500。差额 = 43,000 − 38,000 − 1,500 = $3,500，占销售3.5%。'],
  q:['A store shows a low recorded wastage cost, but its variance is above the others. Where do you look?','某门店已记录的损耗不高，但差额比其他门店大，应该查哪里？'],
  a:['Look for stock that left without a record: items binned with no entry (for example a dropped bread), staff meals, and stock count errors. Check that the stock inventory counts the same items each month.','查没有记录就离开库存的东西：没登记就丢掉的货（例如掉在地上的面包）、员工餐、盘点错误。并确认每月库存盘点包含的物品一致。'],
@@ -525,7 +525,7 @@ var ADV=[
 var APPLY=['Check current month vs budget vs last year. Identify the largest controllable variance, quantify the expected dollar impact, and record a responsible owner.','对比本月实际、预算及去年同期，找出最大可控差异，计算预计金额影响并指定负责人。'];
 var PRAC=['Write one store observation, one root cause, one corrective action, one KPI and one deadline.','写出一项门店观察、一项根因、一项改善行动、一项KPI及期限。'];
 var M=[
-{k:'m1',en:'P&L basics',zh:'损益表基础',
+{k:'m1',en:'Profit basics',zh:'利润基础',
  c:['Understand sales, COGS, labour, occupancy, overhead and operating profit.','认识销售、原料、人工、租金、其他费用及营运利润。'],
  e:['Net sales = transactions × average check.','净销售 = 交易笔数 × 客单价。'],
  q:['Is high sales always high profit?','高销售额一定高利润吗？'],a:['No. Cost structure and product mix decide margin.','不一定，成本结构及产品组合决定利润。'],
@@ -605,11 +605,11 @@ function navBtns(k){
 /* ---------- pages ---------- */
 function home(){
  var F=[['Net Sales = TC × AC','净销售 = 交易笔数 × 客单价'],['Gross Profit = Net Sales − COGS','毛利 = 净销售 − 销售成本'],['Operating Profit = Net Sales − COGS − Labour − Rent − Other','营运利润 = 销售 − 原料 − 人工 − 租金 − 其他费用'],['Operating Margin = Operating Profit ÷ Net Sales × 100%','营运利润率 = 营运利润 ÷ 净销售 × 100%'],['Prime Cost = COGS + Labour','主要成本 = 原料 + 人工'],['Break-even Sales = Fixed Costs ÷ Contribution Margin Ratio','盈亏平衡销售 = 固定成本 ÷ 边际贡献率']];
- var O=[['Read P&L and calculate profit margin','读懂损益表与利润率'],['Diagnose sales and cost variances','分析销售及成本差异'],['Build a realistic recovery plan','制定可执行扭亏方案'],['Assign actions with measurable KPIs','分配责任与可量化指标'],['Present a weekly management update','做每周管理汇报']];
+ var O=[['Read the profit report and calculate profit margin','读懂利润报表与利润率'],['Diagnose sales and cost variances','分析销售及成本差异'],['Build a realistic recovery plan','制定可执行扭亏方案'],['Assign actions with measurable KPIs','分配责任与可量化指标'],['Present a weekly management update','做每周管理汇报']];
  var h='<p class="eyebrow">KELVIN TEAM TRAINING · ILLUSTRATIVE</p><h2 class="title">Kelvin Team Training<br><span class="zh">Kelvin 团队培训</span></h2>'
  +'<div class="card"><p>'+b('From loss-making to profitable operations. Audience: RM · AM · SRM · BOH / FOH Leaders. 8 core modules, 5 advanced modules on production plans, deployment, COGS control and PM requests, a case study, Q&A, ownership and an assessment.','从亏损诊断到盈利改善。培训对象：RM、AM、SRM、BOH/FOH Leaders。含 8 个核心模块、5 个关于生产计划、调配、原料成本控制与PM报修的进阶模块、案例、课堂问答、责任分配和结业测验。')+'</p><div class="row"><button class="btn" data-go="m1">'+bi('Start module 01','开始模块 01')+' →</button></div></div>'
  +'<div class="card"><h3>'+bi('LEARNING OUTCOMES','学习目标')+'</h3>'+O.map(function(o,i){return '<p style="margin:6px 0">'+(i+1)+'. '+bi(o[0],o[1])+'</p>';}).join('')+'</div>'
- +'<div class="card"><h3>'+bi('CORE P&L FORMULAS','核心公式')+'</h3>'+F.map(function(f){return '<span class="f">'+f[0]+'<br><span style="color:var(--mute)">'+f[1]+'</span></span>';}).join('')+'</div>'
+ +'<div class="card"><h3>'+bi('CORE PROFIT FORMULAS','核心公式')+'</h3>'+F.map(function(f){return '<span class="f">'+f[0]+'<br><span style="color:var(--mute)">'+f[1]+'</span></span>';}).join('')+'</div>'
  +'<div class="grid">'+M.map(function(m,i){return '<div class="card"><p class="eyebrow">'+eb(m,i)+'</p><p style="font-weight:600">'+m.en+'</p><p class="note">'+m.zh+'</p><div class="row"><button class="btn ghost" data-go="'+m.k+'">'+bi('Open','打开')+'</button></div></div>';}).join('')+'</div>'
  +'<div class="card warn" style="margin-top:14px"><p>'+b('Note: all financial figures are teaching simulations, not real company financials.','说明：所有财务数据均为教学模拟，非公司真实财务资料。')+'</p></div>';
  return h;
@@ -629,7 +629,7 @@ function mod(m,i){
 var CS={s:110000,c:42,l:20};
 function caseP(){
  var h='<p class="eyebrow">CASE STUDY · 实战案例</p><h2 class="title">Loss to profit <span class="zh">扭亏案例</span></h2>'
- +'<div class="card"><h3>'+bi('ILLUSTRATIVE MONTHLY STORE (SGD)','模拟门店月度数据（新币）')+'</h3><table><thead><tr><th>'+bi('P&L line','项目')+'</th><th class="r">'+bi('Before','改善前')+'</th><th class="r">'+bi('After (yours)','改善后（可调）')+'</th></tr></thead><tbody id="cs-t"></tbody></table></div>'
+ +'<div class="card"><h3>'+bi('ILLUSTRATIVE MONTHLY STORE (SGD)','模拟门店月度数据（新币）')+'</h3><table><thead><tr><th>'+bi('Profit line','项目')+'</th><th class="r">'+bi('Before','改善前')+'</th><th class="r">'+bi('After (yours)','改善后（可调）')+'</th></tr></thead><tbody id="cs-t"></tbody></table></div>'
  +'<div class="card"><h3>'+bi('TRY IT — move the levers','动手试试 — 调整杠杆')+'</h3>'
  +'<div class="sl"><span>'+bi('Net sales','净销售')+'</span><input type="range" id="r-s" min="95000" max="130000" step="500" value="'+CS.s+'"><output id="o-s"></output></div>'
  +'<div class="sl"><span>'+bi('COGS %','原料成本率')+'</span><input type="range" id="r-c" min="38" max="50" step="0.5" value="'+CS.c+'"><output id="o-c"></output></div>'
@@ -670,7 +670,7 @@ function caseCalc(){
 }
 
 function planP(){
- var W=[['Production & waste','生产损耗','BOH Lead','Waste %; stock-outs','Daily','每日'],['Sales & mix','销售组合','FOH Lead','TC, AC, mix','Daily','每日'],['Roster & OT','排班加班','AM','Labour %; OT hours','Weekly','每周'],['Store P&L','门店损益','RM','Profit $, margin %','Weekly','每周'],['Coaching','辅导','SRM','Action closure %','Biweekly','双周'],['Governance','管理监督','VPO','Profit trend; risks','Monthly','每月']];
+ var W=[['Production & waste','生产损耗','BOH Lead','Waste %; stock-outs','Daily','每日'],['Sales & mix','销售组合','FOH Lead','TC, AC, mix','Daily','每日'],['Roster & OT','排班加班','AM','Labour %; OT hours','Weekly','每周'],['Store profit','门店利润','RM','Profit $, margin %','Weekly','每周'],['Coaching','辅导','SRM','Action closure %','Biweekly','双周'],['Governance','管理监督','VPO','Profit trend; risks','Monthly','每月']];
  var h='<p class="eyebrow">ACTION PLAN · 行动计划</p><h2 class="title">30 / 60 / 90-day recovery <span class="zh">30/60/90天执行方案</span></h2>'
  +'<div class="tl">'
  +'<div class="card"><p class="eyebrow">DAY 1–30 · 第1–30天</p><p style="font-weight:600;margin:4px 0">'+b('Validate &amp; quick wins','核对数据，快速改善')+'</p><p class="note">'+b('Validate POS, recipe, inventory, waste, roster and SKU data; identify quick wins.','核对销售、损耗、排班与SKU数据，执行快速改善。')+'</p></div>'
@@ -678,9 +678,9 @@ function planP(){
  +'<div class="card"><p class="eyebrow">DAY 61–90 · 第61–90天</p><p style="font-weight:600;margin:4px 0">'+b('Standardise &amp; review','固化与复盘')+'</p><p class="note">'+b('Standardise proven changes; revise forecast; escalate structural issues.','固化有效方案，复盘预测与风险，上报结构性问题。')+'</p></div></div>'
  +'<div class="card" style="margin-top:14px"><h3>'+bi('ACCOUNTABILITY MATRIX (RACI)','责任矩阵')+'</h3><div style="overflow:auto"><table><thead><tr><th>'+bi('Workstream','项目')+'</th><th>'+bi('Owner','负责人')+'</th><th>KPI '+'指标</th><th>'+bi('Cadence','频率')+'</th></tr></thead><tbody>'
  +W.map(function(r){return '<tr><td>'+r[0]+'<br><span class="note">'+r[1]+'</span></td><td><strong>'+r[2]+'</strong></td><td>'+r[3]+'</td><td>'+r[4]+' / '+r[5]+'</td></tr>';}).join('')+'</tbody></table></div></div>'
- +'<div class="card"><h3>'+bi('WHO DOES WHAT','各角色职责')+'</h3><div class="chips"><span>RM — store P&L and weekly review</span><span>BOH Lead — production accuracy, waste, quality</span><span>FOH Lead — TC, AC, conversion, merchandising</span><span>AM — roster productivity, training, execution</span><span>SRM — coaching, cross-store benchmarking</span><span>VPO — targets, resources, escalation, governance</span></div>'
- +'<p class="note" style="margin-top:8px">RM：门店损益与每周复盘 · BOH Lead：生产准确、损耗、品质 · FOH Lead：客流、客单、转化、陈列 · AM：排班效率、培训、执行 · SRM：辅导与跨店对标 · VPO：目标、资源、升级与监督</p></div>'
- +'<div class="card warn"><h3 style="color:#8a2f1c">'+bi('MANAGEMENT RULE','管理原则')+'</h3><p><strong>'+b('Never improve P&L by compromising food safety, product quality or legal staffing requirements.','不能以牺牲食品安全、产品品质或法定人力要求换取短期利润。')+'</strong></p><p style="margin-top:8px;font-weight:600">FACT → CAUSE → ACTION → OWNER → DEADLINE → IMPACT</p></div>';
+ +'<div class="card"><h3>'+bi('WHO DOES WHAT','各角色职责')+'</h3><div class="chips"><span>RM — store profit and weekly review</span><span>BOH Lead — production accuracy, waste, quality</span><span>FOH Lead — TC, AC, conversion, merchandising</span><span>AM — roster productivity, training, execution</span><span>SRM — coaching, cross-store benchmarking</span><span>VPO — targets, resources, escalation, governance</span></div>'
+ +'<p class="note" style="margin-top:8px">RM：门店利润与每周复盘 · BOH Lead：生产准确、损耗、品质 · FOH Lead：客流、客单、转化、陈列 · AM：排班效率、培训、执行 · SRM：辅导与跨店对标 · VPO：目标、资源、升级与监督</p></div>'
+ +'<div class="card warn"><h3 style="color:#8a2f1c">'+bi('MANAGEMENT RULE','管理原则')+'</h3><p><strong>'+b('Never improve profit by compromising food safety, product quality or legal staffing requirements.','不能以牺牲食品安全、产品品质或法定人力要求换取短期利润。')+'</strong></p><p style="margin-top:8px;font-weight:600">FACT → CAUSE → ACTION → OWNER → DEADLINE → IMPACT</p></div>';
  return h+navBtns('plan');
 }
 

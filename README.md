@@ -1,2 +1,2 @@
-# gkk-bakery-pl-training
-Bakery P&amp;L Management bilingual training (illustrative data)
+# kelvin-team-training
+Bilingual (EN/中) team training page (illustrative data)

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations — Kelvin Team Training 运营课程</title>
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body class="lang-both">
+<div class="app">
+<aside id="side"></aside>
+<main>
+ <div class="top">
+  <button class="menu" id="menu" aria-label="Menu">Menu 目录</button>
+  <div class="bar"><i id="barfill"></i></div>
+  <span class="pc" id="pc"></span>
+  <div class="seg" role="group" aria-label="Language">
+   <button data-l="both" class="on">EN + 中</button><button data-l="en">EN</button><button data-l="zh">中</button>
+  </div>
+ </div>
+ <div id="view"></div>
+</main>
+</div>
+<script>
+(function(){
+function mk(pre,ins,outs,note){
+ var html='<div class="hr hr6" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">'+ins.map(function(f,i){return '<div><label>'+f[0]+' / '+f[1]+'</label><input type="number" min="0" step="any" id="'+pre+i+'" value="'+f[2]+'"></div>';}).join('')+'</div>'
+ +'<div class="err" id="'+pre+'e">Enter numbers of 0 or more. 请输入大于或等于0的数字。</div>'
+ +'<div class="kpi">'+outs.map(function(o,j){return '<div><span class="note">'+o[0]+' / '+o[1]+'</span><b id="'+pre+'o'+j+'"></b></div>';}).join('')+'</div>'
+ +(note?'<p class="note">'+note+'</p>':'');
+ return {html:html,init:function(){
+  function upd(){
+   var v=[],bad=false,i;
+   for(i=0;i<ins.length;i++){var r=document.getElementById(pre+i).value.trim();if(r===''||isNaN(+r)||+r<0)bad=true;v.push(+r);}
+   var e=document.getElementById(pre+'e');
+   if(bad){e.style.display='block';return;}
+   e.style.display='none';
+   outs.forEach(function(o,j){document.getElementById(pre+'o'+j).textContent=o[2](v);});
+  }
+  document.getElementById('tool').addEventListener('input',upd);upd();}};
+}
+function r1(n){return (Math.round(n*10)/10).toString();}
+function d(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function dd(n){return '$'+(Math.round(n*100)/100).toFixed(2);}
+
+window.COURSE={id:'ops',en:'Operations: production, waste, ordering, stock, labour',zh:'运营：生产、损耗、订货、盘点、人工',
+intro:['Six short units for store leaders. You learn how to plan production from demand, record and reduce waste, set par levels, count stock accurately, schedule people to demand, and run a daily and weekly review. Every unit ends with something to do in your store.','给门店管理者的 6 个短单元：按需求做生产计划、记录并减少损耗、设定定量、准确盘点、按需求排班，以及每日与每周检讨。每个单元最后都有一件要在门店做的事。'],
+units:[
+{id:'u1',en:'Production plan from demand',zh:'按需求做生产计划',
+ lesson:['A production plan says what to bake, how many, and when. Build it from demand, not habit: look at the last 4 to 8 same weekdays, separate weekdays, weekends, holidays and events, and time the bake waves to land before each peak. Three numbers tell you if the plan works: sell-through % (sold ÷ produced), waste % (unsold ÷ produced) and the time each item sold out. Low waste alone is not success. If items sell out early you lose sales. Never reach a waste target by cutting the display below standard.','生产计划决定烤什么、烤多少、何时烤。要根据需求而不是习惯来做：看最近 4 至 8 个同一星期几，区分平日、周末、假期和活动，并让烘焙批次在每个高峰之前完成。三个数字判断计划好不好：售罄率（售出 ÷ 生产）、损耗率（没卖出 ÷ 生产）和每个品项的售罄时间。只看低损耗不算成功，太早售罄就损失销售。不能为了达到损耗目标把陈列减到标准以下。'],
+ example:['Plan 100, sold 82: sell-through 82%, waste 18%. At $2 cost per unit the waste is 18 × $2 = $36 a day, about $1,080 in a 30-day month.','计划 100、售出 82：售罄率 82%，损耗率 18%。每件成本 $2，每天损耗 18 × $2 = $36，30 天约 $1,080。'],
+ tool:mk('a',[['Produced','生产量',100],['Sold','售出',82],['Cost per unit $','每件成本 $',2]],[['Sell-through %','售罄率',function(v){return v[0]>0?r1(v[1]/v[0]*100)+'%':'-';}],['Waste %','损耗率',function(v){return v[0]>0?r1((v[0]-v[1])/v[0]*100)+'%':'-';}],['Waste per day','每日损耗金额',function(v){return dd(Math.max(v[0]-v[1],0)*v[2]);}],['Waste per 30 days','30天损耗',function(v){return d(Math.max(v[0]-v[1],0)*v[2]*30);}]],'If sold is higher than produced, enter the produced quantity you really had. 若售出多于生产，请填实际拥有的数量。'),
+ sc:{q:['Your store bakes the same 100 units of an item every day. Monday sells 70, Saturday sells out by 3pm. What do you do first?','门店每天同一品项都烤 100 件。周一只卖 70 件，周六下午 3 点就售罄。你首先做什么？'],
+  o:[{t:['Cut to 90 every day to reduce waste','每天都减到 90 件以减少损耗'],ok:0,w:['That removes waste on Monday but makes Saturday sell out even earlier and loses more sales.','周一损耗少了，但周六会更早售罄，损失更多销售。']},
+     {t:['Plan by day type and add a Saturday bake wave before the peak','按日型安排，并在周六高峰前加一批烘焙'],ok:1,w:['Demand differs by day, so the plan should too. A wave before the peak keeps the display full when customers come.','需求每天不同，计划也应不同。高峰前加一批，顾客来的时候陈列才是满的。']},
+     {t:['Ask staff to sell faster on Monday','叫员工周一卖快一点'],ok:0,w:['Selling harder cannot fix a plan that does not match demand.','再努力卖也解决不了与需求不符的计划。']}]},
+ quiz:[
+  {q:['Which three numbers tell you if the plan works?','哪三个数字能判断计划好不好？'],o:[['Sell-through %, waste %, sold-out time','售罄率、损耗率、售罄时间'],['Sales, rent, labour','销售、租金、人工'],['TC, AC, margin','客流、客单、利润率']],a:0,w:['These show over-production, under-production and timing.','它们反映生产过量、不足和时间是否对。']},
+  {q:['Plan 80, sold 60. What is the waste %?','计划 80，售出 60，损耗率是多少？'],o:[['20%','20%'],['25%','25%'],['75%','75%']],a:1,w:['(80 − 60) ÷ 80 = 25%.','(80 − 60) ÷ 80 = 25%。']},
+  {q:['Waste is only 2% but three items sold out at noon. Is the plan good?','损耗只有 2%，但三个品项中午就售罄，计划好吗？'],o:[['Yes, waste is low','好，损耗低'],['No, early sell-outs lose sales','不好，太早售罄损失销售'],['It does not matter','没关系']],a:1,w:['Low waste can hide under-production.','低损耗可能掩盖生产不足。']},
+  {q:['How many past days should you look at?','应该参考过去多少天的数据？'],o:[['Yesterday only','只看昨天'],['Last 4 to 8 same weekdays','最近 4 至 8 个同一星期几'],['Last year only','只看去年']],a:1,w:['Same weekdays give a fair pattern and smooth out one-off days.','同一星期几最能反映规律，也不受单日异常影响。']},
+  {q:['When should a bake wave be ready?','烘焙批次应何时完成？'],o:[['After the peak starts','高峰开始后'],['Before the peak starts','高峰开始前'],['At closing','打烊时']],a:1,w:['Stock and display must be in place when customers arrive.','顾客到来时货和陈列就要就位。']}],
+ task:['Pick one item. Compare planned vs sold for the last 4 same weekdays. Write the gap and one change you will make to the plan.','选一个品项，对比最近 4 个同一星期几的计划量与售出量，写下差距和一项要调整的计划。'],
+ src:[['Oregon DEQ: bakery waste case study (POS data and par planning)','https://cms.oregon.gov/deq/mm/Documents/CommFood-CaseStudy15.pdf'],['NSW Love Food Hate Waste: Bread and Bakery Sector Action Plan','https://www.lovefoodhatewaste.nsw.gov.au/sites/default/files/2023-02/Bread-and-Bakery-Sector-Action-Plan_Full-Report-1.pdf']]},
+
+{id:'u2',en:'Waste: record, find, reduce',zh:'损耗：记录、找原因、减少',
+ lesson:['Waste is stock that is made or bought but not sold: unsold items, drops, damage, expired and quality rejects. Record every discard at the moment it happens with item, quantity and reason. Review the top 5 items and the top reasons every week. Unrecorded waste does not disappear: it shows up later as a gap between the MIA food cost and the ABC food cost. Industry sources suggest bakery waste can reach double-digit percentages of production, so small daily habits matter.','损耗是做了或买了但没卖出去的货：没卖掉的、掉落、损坏、过期和品质不合格。每次丢弃当场记录品项、数量、原因。每周检讨前 5 个品项和主要原因。没记录的损耗不会消失，它会变成 MIA 与 ABC 食材成本之间的差额。行业资料显示，烘焙的损耗可占生产量的两位数百分比，所以每天的小习惯很重要。'],
+ example:['Waste $180 in a month with sales $5,000 is 3.6% of sales. Compare with your outlet waste vs sales limit (5% in this training). Dropped bread: 3 × $1.50 = $4.50 each time it is not recorded.','一个月损耗 $180、销售 $5,000，占销售 3.6%，与门店损耗占销售上限（本培训为 5%）对比。掉落面包 3 × $1.50 = $4.50，每次没记录就少算这一笔。'],
+ tool:mk('b',[['Waste $','损耗金额 $',180],['Sales $','销售 $',5000],['Limit %','上限 %',5]],[['Waste % of sales','损耗占销售',function(v){return v[1]>0?r1(v[0]/v[1]*100)+'%':'-';}],['Status','状态',function(v){return v[1]>0?(v[0]/v[1]*100>v[2]?'Above limit 超出':'Within limit 在范围内'):'-';}]],'The limit is the outlet waste vs sales limit used in this training. Use your company figure if different. 上限为本培训使用的数字，公司数字不同时以公司为准。'),
+ sc:{q:['A customer drops a bread. Staff put it straight in the bin and carry on serving. What should have happened?','顾客把面包掉在地上，员工直接丢进垃圾桶就继续服务。应该怎么做？'],
+  o:[{t:['Nothing, it is only one bread','没事，只是一个面包'],ok:0,w:['Small unrecorded items add up and show as a food cost gap.','小笔没记录的损耗累积起来，会变成食材成本差额。']},
+     {t:['Record item, quantity and reason in the waste log at once','马上在损耗记录里写下品项、数量和原因'],ok:1,w:['Recording at the moment keeps the numbers true and lets you find the real causes.','当场记录才能让数字真实，也才能找到真正原因。']},
+     {t:['Record it at the end of the week from memory','周末凭记忆补记录'],ok:0,w:['Memory is unreliable and items get missed.','凭记忆不可靠，容易漏。']}]},
+ quiz:[
+  {q:['When should a discard be recorded?','什么时候记录丢弃？'],o:[['At the moment it happens','发生当下'],['At month end','月底'],['Only if it is expensive','只有贵的才记']],a:0,w:['Immediate recording is the most accurate.','当场记录最准确。']},
+  {q:['Where does unrecorded waste show up?','没记录的损耗会出现在哪里？'],o:[['Nowhere','哪里都不会'],['In the MIA vs ABC food cost variance','MIA 与 ABC 食材成本的差额'],['In rent','租金']],a:1,w:['The stock left but no record explains it.','货没了却没有记录解释，就变成差额。']},
+  {q:['Waste $120, sales $4,000. Waste % of sales?','损耗 $120，销售 $4,000，损耗占销售多少？'],o:[['3%','3%'],['30%','30%'],['0.3%','0.3%']],a:0,w:['120 ÷ 4,000 = 3%.','120 ÷ 4,000 = 3%。']},
+  {q:['What three things go in each waste entry?','每条损耗记录要写哪三项？'],o:[['Item, quantity, reason','品项、数量、原因'],['Name, date, signature','姓名、日期、签名'],['Price, supplier, batch','价格、供应商、批号']],a:0,w:['These let you total the cost and find the cause.','才能算出金额并找到原因。']},
+  {q:['How do you reduce waste without hurting sales?','怎样减少损耗又不伤害销售？'],o:[['Cut the display','减少陈列'],['Fix the plan, timing and par using the data','用数据调整计划、时间和定量'],['Stop recording','不再记录']],a:1,w:['Fix the cause, not the display.','解决原因，而不是减少陈列。']}],
+ task:['For one full day record every discard in the waste log. Total the cost and name the top reason.','整整一天把每次丢弃都记进损耗记录，算出总金额，并写出最主要的原因。'],
+ src:[['Restroworks: reducing bakery waste','https://www.restroworks.com/blog/?p=24153'],['Toast: par level and food waste','https://pos.toasttab.com/blog/on-the-line/par-level']]},
+
+{id:'u3',en:'Par levels and ordering',zh:'定量与订货',
+ lesson:['A par level is the stock you want on hand so you do not run out. A common formula is: par = (average daily usage × delivery lead time in days) + safety stock. The order quantity is the par minus what is on hand now. Par is not fixed: raise or lower it for day type, season, promotions and events, and review it often. Too high means waste and tied-up cash. Too low means stock-outs and lost sales.','定量是为了不断货而要保持的库存。常用公式：定量 =（每日平均用量 × 送货提前天数）+ 安全库存。订货量 = 定量 − 现有库存。定量不是固定不变的：要按日型、季节、促销和活动调高或调低，并常常检讨。太高会浪费、占用资金；太低会断货、损失销售。'],
+ example:['Flour: uses 20 kg a day, delivery takes 2 days, safety stock 10 kg. Par = (20 × 2) + 10 = 50 kg. With 18 kg on hand, order 50 − 18 = 32 kg.','面粉：每天用 20 公斤，送货要 2 天，安全库存 10 公斤。定量 =（20 × 2）+ 10 = 50 公斤。现有 18 公斤，订货 50 − 18 = 32 公斤。'],
+ tool:mk('c',[['Daily usage','每日用量',20],['Lead time days','提前天数',2],['Safety stock','安全库存',10],['On hand','现有库存',18]],[['Par level','定量',function(v){return r1(v[0]*v[1]+v[2]);}],['Order quantity','订货量',function(v){return r1(Math.max(v[0]*v[1]+v[2]-v[3],0));}]],'Use the same unit for all four numbers. 四个数字使用同一单位。'),
+ sc:{q:['A big promotion starts next week. Your par levels are the same as last month. What do you do?','下周有大型促销，定量和上个月一样。你怎么做？'],
+  o:[{t:['Keep par unchanged to be safe','保持不变比较保险'],ok:0,w:['Demand will rise, so you risk stock-outs and lost sales.','需求会上升，容易断货、损失销售。']},
+     {t:['Raise par for the promotion days using a demand estimate, then review after','按需求估算调高促销期的定量，事后再检讨'],ok:1,w:['Par should follow demand. Reviewing afterwards improves the next estimate.','定量应跟着需求走，事后检讨能让下次估算更准。']},
+     {t:['Double every order','所有订货都加倍'],ok:0,w:['A blanket increase creates waste and ties up cash.','一刀切加倍会造成浪费、占用资金。']}]},
+ quiz:[
+  {q:['Which formula gives par level?','哪个公式算出定量？'],o:[['Usage × lead time + safety stock','用量 × 提前天数 + 安全库存'],['Sales − cost','销售 − 成本'],['Stock ÷ days','库存 ÷ 天数']],a:0,w:['Cover the lead time, plus a buffer.','要覆盖送货期，再加缓冲。']},
+  {q:['Usage 15 a day, lead time 3 days, safety stock 5. Par?','每天用 15，提前 3 天，安全库存 5。定量？'],o:[['50','50'],['45','45'],['20','20']],a:0,w:['15 × 3 + 5 = 50.','15 × 3 + 5 = 50。']},
+  {q:['Par 50, on hand 18. Order quantity?','定量 50，现有 18。订货量？'],o:[['32','32'],['18','18'],['68','68']],a:0,w:['Order up to par: 50 − 18 = 32.','补到定量：50 − 18 = 32。']},
+  {q:['What is the risk of a par that is too high?','定量太高的风险是什么？'],o:[['Stock-outs','断货'],['Waste and tied-up cash','浪费和占用资金'],['Nothing','没有']],a:1,w:['Extra stock spoils or sits unused.','多余库存会过期或闲置。']},
+  {q:['When should par be changed?','什么时候要调整定量？'],o:[['Never','从不'],['For day type, season, promotions and events','按日型、季节、促销和活动'],['Only each year','每年一次']],a:1,w:['Demand moves, so par must move.','需求会变，定量也要变。']}],
+ task:['Choose 3 items. Work out the par for each and compare with what you order now. Write one change.','选 3 个品项，算出各自的定量，与现在的订货做法对比，写下一项调整。'],
+ src:[['Square: PAR levels and FIFO','https://squareup.com/us/en/the-bottom-line/operating-your-business/manage-restaurant-inventory-across-ordering-channels'],['Toast: par inventory','https://pos.toasttab.com/ca/blog/on-the-line/par-inventory']]},
+
+{id:'u4',en:'Stock count, FIFO and food cost',zh:'盘点、先进先出与食材成本',
+ lesson:['Food cost is only as accurate as the stock count. Count the same items, in the same places, at the same time and the same way every month, and have two people check. Use FIFO (first in, first out): label each delivery with the date received and use the oldest stock first. Count high-value items more often (cycle counts) so problems show in days, not at month end. Link it to the finance course: variance = MIA − ABC − general packaging, and the tolerance in this training is 2% of net sales. Unrecorded dropped items and staff meals affect food cost only, not packaging.','食材成本的准确度取决于盘点的准确度。每月在同一时间、同一地点、用同一方法盘点同样的物品，并由两人核对。使用先进先出：每批收货标上日期，先用最早的。贵重品项更常盘点（循环盘点），问题几天内就能发现，不必等到月底。与财务课衔接：差额 = MIA − ABC − 一般包装成本，本培训的容许范围是净销售的 2%。没记录的掉落和员工餐只影响食材成本，不影响包装。'],
+ example:['Sales $100,000, variance $3,500 = 3.5%. This is above the 2% tolerance, so check the stock count list, unrecorded discards and staff meals.','销售 $100,000，差额 $3,500，占 3.5%，超过 2% 的容许范围，要检查盘点清单、没记录的丢弃和员工餐。'],
+ tool:mk('d',[['Net sales $','净销售 $',100000],['Variance $','差额 $',3500],['Tolerance %','容许范围 %',2]],[['Variance %','差额占销售',function(v){return v[0]>0?(Math.round(v[1]/v[0]*10000)/100)+'%':'-';}],['Status','状态',function(v){return v[0]>0?(v[1]/v[0]*100>v[2]?'Investigate 要追查':'Within tolerance 在范围内'):'-';}]]),
+ sc:{q:['A new staff member counts the shop stock but forgets the freezer. What happens to food cost?','新员工盘点时漏了冰柜。食材成本会怎样？'],
+  o:[{t:['Nothing changes','没有影响'],ok:0,w:['Missing stock lowers the closing balance, which raises usage.','漏掉的库存让期末结存变少，用量就变大。']},
+     {t:['Usage looks higher and food cost looks worse, so the variance grows','用量看起来变高，食材成本变差，差额变大'],ok:1,w:['A lower closing balance means higher calculated usage. Use a fixed count list with locations and two-person checks.','期末结存偏低，算出的用量就偏高。要用固定的盘点清单（含位置）并两人核对。']},
+     {t:['Food cost looks better','食材成本看起来更好'],ok:0,w:['It goes the other way: missing stock makes usage look higher.','恰好相反：漏掉库存会让用量看起来更高。']}]},
+ quiz:[
+  {q:['What does FIFO stand for?','FIFO 是什么意思？'],o:[['First in, first out','先进先出'],['Fast in, fast out','快进快出'],['Fixed inventory, fixed order','固定库存固定订货']],a:0,w:['Use the oldest stock first.','先用最早的货。']},
+  {q:['How do you make FIFO work?','怎样做到先进先出？'],o:[['Label deliveries with the received date','每批收货标上日期'],['Hide old stock','把旧货藏起来'],['Order less','少订货']],a:0,w:['Dates let anyone see which is oldest.','有日期，谁都看得出哪个最旧。']},
+  {q:['Variance $2,400, sales $100,000, tolerance 2%. Result?','差额 $2,400，销售 $100,000，容许 2%。结果？'],o:[['Within tolerance','在范围内'],['Above tolerance','超出'],['Cannot tell','无法判断']],a:1,w:['2.4% is above 2%.','2.4% 高于 2%。']},
+  {q:['Why count high-value items more often?','为什么贵重品项要更常盘点？'],o:[['It is fun','好玩'],['Problems show in days, not at month end','问题几天内就能发现'],['It replaces the monthly count','可以取代月度盘点']],a:1,w:['Early detection limits the loss.','早发现，损失就小。']},
+  {q:['Which of these affects food cost only, not packaging?','哪项只影响食材成本，不影响包装？'],o:[['Dropped bread not recorded','没记录的掉落面包'],['Paper bag usage','纸袋用量'],['Box stock','盒子库存']],a:0,w:['Food items affect food cost; bags and boxes are packaging.','食物影响食材成本；袋子和盒子属于包装。']}],
+ task:['Do a spot count of 5 high-value items. Compare with the system or last count and write any gap and its likely cause.','抽盘 5 个贵重品项，与系统或上次盘点对比，写下差距和可能原因。'],
+ src:[['Petpooja: restaurant inventory step by step','https://blog.petpooja.com/procurement-cost-control/ultimate-guide-to-restaurant-inventory-management/'],['Square: FIFO','https://squareup.com/us/en/the-bottom-line/operating-your-business/manage-restaurant-inventory-across-ordering-channels'],['NetSuite: restaurant inventory control','https://www.netsuite.com/portal/resource/articles/inventory-management/restaurant-inventory-management.shtml']]},
+
+{id:'u5',en:'Labour and roster to demand',zh:'按需求排班与人工',
+ lesson:['Schedule people to hourly demand, not just to the day total. Sales alone is not enough, because basket size and buying patterns change by hour and day. Do not cut service at the peak: one retail study across 41 stores found every store was understaffed in its own three-hour daily peak. Remove idle overlap and overtime first, and move prep, stocking and cleaning into non-peak hours. Two measures: SPLH (sales per labour hour) = sales ÷ labour hours, and labour % = labour cost ÷ sales. Keep food safety and legal staffing requirements.','要按每小时需求排班，不能只看全天总数。单看销售不够，因为客单和购买习惯每个小时、每一天都不同。高峰时不要削减服务人手：一项涵盖 41 间门店的零售研究发现，每间店在自己每天三小时的高峰都人手不足。先减少空闲重叠和加班，再把备料、补货、清洁移到非高峰。两个指标：SPLH（每人工小时销售）= 销售 ÷ 人工小时；人工成本率 = 人工成本 ÷ 销售。必须遵守食品安全和法定人力要求。'],
+ example:['Sales $3,000 over 80 labour hours: SPLH = $37.5. Labour cost $690: labour % = 690 ÷ 3,000 = 23%.','销售 $3,000、人工 80 小时：SPLH = $37.5。人工成本 $690：人工成本率 = 690 ÷ 3,000 = 23%。'],
+ tool:mk('e',[['Sales $','销售 $',3000],['Labour hours','人工小时',80],['Labour cost $','人工成本 $',690]],[['SPLH','每人工小时销售',function(v){return v[1]>0?dd(v[0]/v[1]):'-';}],['Labour %','人工成本率',function(v){return v[0]>0?r1(v[2]/v[0]*100)+'%':'-';}]]),
+ sc:{q:['Labour % is high this month. A manager wants to cut one counter staff during the lunch peak. What is better?','本月人工成本率偏高。经理想在午市高峰减少一位柜台人手。更好的做法是什么？'],
+  o:[{t:['Cut the peak staff, it saves the most','减高峰人手，省得最多'],ok:0,w:['Peak understaffing causes queues and lost sales, which hurts the ratio more.','高峰人手不足会排长队、损失销售，反而更伤比率。']},
+     {t:['Find idle overlap and overtime in non-peak hours and fix those first','先找非高峰的空闲重叠和加班并改善'],ok:1,w:['This saves hours without cutting service when customers are there.','这样省下人工，又不影响有顾客时的服务。']},
+     {t:['Ask staff to work faster','叫员工做快一点'],ok:0,w:['It does not fix a roster that does not match demand.','解决不了与需求不符的排班。']}]},
+ quiz:[
+  {q:['Sales $2,400, 60 labour hours. SPLH?','销售 $2,400，人工 60 小时，SPLH？'],o:[['$40','$40'],['$25','$25'],['$144','$144']],a:0,w:['2,400 ÷ 60 = 40.','2,400 ÷ 60 = 40。']},
+  {q:['Labour cost $600, sales $2,500. Labour %?','人工 $600，销售 $2,500，人工成本率？'],o:[['24%','24%'],['4%','4%'],['41.7%','41.7%']],a:0,w:['600 ÷ 2,500 = 24%.','600 ÷ 2,500 = 24%。']},
+  {q:['Which should you remove first?','应先减少哪个？'],o:[['Peak counter staff','高峰柜台人手'],['Idle overlap and overtime','空闲重叠和加班'],['Breaks','休息']],a:1,w:['They cost money without serving customers.','它们花钱却没服务到顾客。']},
+  {q:['Why is daily revenue alone not enough for scheduling?','为什么只看每日销售不够排班？'],o:[['Basket size and buying patterns vary by hour','客单和购买习惯每小时不同'],['Revenue is always wrong','销售总是错的'],['It is enough','已经够了']],a:0,w:['The same sales can need different staffing at different hours.','同样的销售，不同时段需要的人手不同。']},
+  {q:['Which tasks can move to non-peak hours?','哪些工作可移到非高峰？'],o:[['Prep, stocking, cleaning','备料、补货、清洁'],['Serving at the counter','柜台服务'],['Payment','收银']],a:0,w:['They do not need to happen while customers queue.','它们不必在顾客排队时做。']}],
+ task:['Take one day. Put the roster next to hourly customer counts. Mark one idle overlap and one peak gap, and write the roster change.','选一天，把排班表和每小时客流并排放，标出一处空闲重叠和一处高峰缺口，写下要调整的排班。'],
+ src:[['McKinsey: smarter schedules, better budgets','https://www.mckinsey.de/industries/retail/our-insights/smarter-schedules-better-budgets-how-to-improve-store-operations'],['Quinyx: the retail scheduling paradox','https://www.quinyx.com/blog/the-retail-scheduling-paradox'],['EHL: restaurant staff scheduling','https://insights.ehl.edu/restaurant-staff-scheduling']]},
+
+{id:'u6',en:'Daily huddle and weekly review',zh:'每日晨会与每周检讨',
+ lesson:['A short daily huddle keeps the numbers alive. In about 5 minutes: yesterday (sales vs target, waste, sold-out times), today (day type, bake waves, roster) and one focus. Weekly, the RM reviews trends, the top 5 waste and stock-out items, and agrees an action with an owner and a deadline. A good update follows one chain: fact, cause, action, owner, deadline, impact. Suggested escalation: team lead the same day, RM within 48 hours, then SRM and VPO in their regular reviews. Never trade food safety or quality for a number.','每日简短晨会让数字保持鲜活。约 5 分钟：昨天（销售对目标、损耗、售罄时间）、今天（日型、烘焙批次、排班）和一个重点。每周由 RM 检讨趋势、损耗和断货前 5 名的品项，并确定行动、负责人和期限。好的汇报遵循同一条链：事实、原因、行动、负责人、期限、影响。建议的升级：组长当天处理，RM 在 48 小时内，之后由 SRM 与 VPO 在定期检讨中跟进。不能为了数字牺牲食品安全或品质。'],
+ example:['Fact: waste was 7% on Tuesday. Cause: an extra afternoon batch. Action: remove it. Owner: BOH Lead. Deadline: this Friday. Impact: about $30 a day.','事实：周二损耗 7%。原因：下午多烤一批。行动：取消该批。负责人：BOH Lead。期限：本周五。影响：每天约 $30。'],
+ sc:{q:['In the huddle the team starts blaming each other for yesterday waste. What do you do?','晨会上大家开始互相责怪昨天的损耗。你怎么做？'],
+  o:[{t:['Let them finish, then move on','让大家说完再继续'],ok:0,w:['Blame teaches people to hide numbers.','责怪只会让人隐瞒数字。']},
+     {t:['Return to facts: what happened, the cause, one action, an owner and a deadline','拉回事实：发生什么、原因、一项行动、负责人和期限'],ok:1,w:['Facts and a clear owner turn a complaint into an action.','事实加上明确的负责人，把抱怨变成行动。']},
+     {t:['Skip the huddle tomorrow','明天不开晨会了'],ok:0,w:['Skipping loses the routine that finds problems early.','不开就失去了及早发现问题的习惯。']}]},
+ quiz:[
+  {q:['About how long should the daily huddle be?','每日晨会大约多久？'],o:[['5 minutes','5 分钟'],['1 hour','1 小时'],['Once a month','每月一次']],a:0,w:['Short and regular beats long and rare.','短而固定，胜过长而少。']},
+  {q:['What are the three parts of the huddle?','晨会的三个部分是什么？'],o:[['Yesterday, today, one focus','昨天、今天、一个重点'],['Rent, levy, salary','租金、外劳税、薪水'],['Praise, blame, close','表扬、责怪、结束']],a:0,w:['Look back, plan ahead, pick one thing.','回顾、规划、选一件事。']},
+  {q:['What is the report chain?','汇报的链条是什么？'],o:[['Fact, cause, action, owner, deadline, impact','事实、原因、行动、负责人、期限、影响'],['Idea, plan, hope','想法、计划、希望'],['Sales, cost, profit','销售、成本、利润']],a:0,w:['Each step makes the update usable.','每一步都让汇报更可用。']},
+  {q:['Who reviews the top waste items weekly?','每周谁检讨损耗前几名的品项？'],o:[['RM','RM'],['Nobody','没有人'],['The supplier','供应商']],a:0,w:['The RM owns the store result and reviews weekly.','RM 负责门店结果，每周检讨。']},
+  {q:['A number is hit by cutting food quality. Is that acceptable?','靠降低食品品质达到数字，可以吗？'],o:[['Yes, the target is met','可以，达标了'],['No, safety and quality come first','不可以，安全与品质第一'],['Only on weekends','只在周末可以']],a:1,w:['Never trade safety or quality for a number.','不能为了数字牺牲安全或品质。']}],
+ task:['Run the 5-minute huddle on three days this week. Write the one focus you chose each day and what changed.','本周有三天做 5 分钟晨会，写下每天选的重点以及有什么变化。'],
+ src:[]}
+]};
+})();
+</script>
+<script src="../shared/engine.js"></script>
+</body>
+</html>

@@ -134,6 +134,9 @@ function hash(t){var h=0,i;for(i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))>>>0;r
 function rot(arr,shift){var n=arr.length,r=new Array(n),i;for(i=0;i<n;i++)r[(i+shift)%n]=arr[i];return r;}
 function merge(){
  var X=window.COURSE_EXTRA||{};
+ if(C.id==='ops'){C.units.forEach(function(u){if(u.id!=='u4'||u.quiz.length<5)return;
+  u.quiz[2].q=['Variance is how far actual food cost is above expected. Variance $2,400, sales $100,000, tolerance 2%. Result?','差额是实际食材成本比预期高出的部分。差额 $2,400，销售 $100,000，容许 2%。结果？'];
+  u.quiz[4].q=['Which of these is a food cost item, not packaging?','下面哪一项属于食材成本，而不是包装？'];});}
  C.units.forEach(function(u){
   u.scs=[u.sc];
   var x=X[u.id];if(!x)return;
@@ -141,6 +144,7 @@ function merge(){
   (x.quiz||[]).forEach(function(q){var sh=hash(q.q[0])%q.o.length;u.quiz.push({q:q.q,o:rot(q.o,sh),a:(q.a+sh)%q.o.length,w:q.w});});
  });
 }
+try{document.title=document.title.replace(/Kelvin Team Training/g,'Bakery Team Academy');}catch(e){}
 var started=false;
 function go2(ok){if(started)return;started=true;try{if(ok)merge();else C.units.forEach(function(u){u.scs=[u.sc];});}catch(e){C.units.forEach(function(u){u.scs=u.scs||[u.sc];});}main();}
 var sc=document.createElement('script');

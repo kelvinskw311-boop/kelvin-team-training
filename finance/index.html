@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Finance and profit — Kelvin Team Training 财务与利润</title>
+<title>Finance and profit — Bakery Team Academy 财务与利润</title>
 <style>
 :root{--bg:#fbf6ee;--card:#fff;--ink:#3b2a1e;--mute:#7a6757;--line:#eadfce;--crust:#b5651d;--crust-bg:#f7e7d3;--leaf:#4f7a3a;--leaf-bg:#e6f0dc;--red:#a8341f;--red-bg:#f8e1db;--sky:#2c6a8f;--sky-bg:#dcebf4;--r:12px}
 *{box-sizing:border-box}
@@ -121,5 +121,12 @@ td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
 </main>
 </div>
 <script src="app.js"></script>
+<script>
+(function(){var v=document.getElementById('view');if(!v)return;var busy=false;
+function fix(){if(busy)return;busy=true;try{var e=v.querySelector('.eyebrow'),h=v.querySelector('.title');
+if(e&&e.textContent.indexOf('KELVIN TEAM TRAINING')===0)e.textContent='BAKERY TEAM ACADEMY · ILLUSTRATIVE';
+if(h&&h.textContent.indexOf('Kelvin Team Training')===0)h.innerHTML='Bakery Team Academy<br><span class="zh">烘焙团队学堂</span>';}catch(x){}busy=false;}
+new MutationObserver(fix).observe(v,{childList:true,subtree:true});fix();})();
+</script>
 </body>
 </html>

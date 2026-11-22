@@ -1,6 +1,7 @@
 (function(){
 "use strict";
 var C=window.COURSE,PASS=80,KEY='ktt_v1';
+function main(){
 function b(en,zh){return '<span class="en">'+en+'</span><span class="zh">'+zh+'</span>';}
 function bi(en,zh){return '<span class="inl">'+b(en,zh)+'</span>';}
 function $(s,r){return (r||document).querySelector(s);}
@@ -49,12 +50,12 @@ function home(){
 
 function unit(u,i){
  var p=P(u.id),h='<p class="eyebrow">UNIT '+(i+1)+' / '+C.units.length+'</p><h2 class="title">'+u.en+' <br><span class="zh">'+u.zh+'</span></h2>'
- +'<div class="steps" id="stp"><span class="ok">1 Lesson 短课</span><span class="ok">2 Example 例子</span><span id="s3"'+(p.s?' class="ok"':'')+'>3 Scenario 情境</span><span id="s4"'+(p.q>=PASS?' class="ok"':'')+'>4 Quiz 测验</span><span id="s5"'+(p.t?' class="ok"':'')+'>5 Store task 门店任务</span></div>'
+ +'<div class="steps" id="stp"><span class="ok">1 Lesson 短课</span><span class="ok">2 Example 例子</span><span id="s3"'+(scAll(u,p)?' class="ok"':'')+'>3 Scenario 情境</span><span id="s4"'+(p.q>=PASS?' class="ok"':'')+'>4 Quiz 测验</span><span id="s5"'+(p.t?' class="ok"':'')+'>5 Store task 门店任务</span></div>'
  +'<div class="card"><h3>'+bi('1 · LESSON','1 · 短课')+'</h3><p>'+b(u.lesson[0],u.lesson[1])+'</p></div>'
  +'<div class="card ex"><h3>'+bi('2 · WORKED EXAMPLE','2 · 计算例子')+'</h3><p class="big">'+b(u.example[0],u.example[1])+'</p></div>'
  +(u.tool?'<div class="card" id="tool"><h3>'+bi('TRY IT','动手试试')+'</h3>'+u.tool.html+'</div>':'')
- +'<div class="card" id="scn"><h3>'+bi('3 · SCENARIO: WHAT WOULD YOU DO?','3 · 情境判断：你会怎么做？')+'</h3><p>'+b(u.sc.q[0],u.sc.q[1])+'</p>'
- +u.sc.o.map(function(o,j){return '<button class="opt" data-o="'+j+'">'+b(o.t[0],o.t[1])+'</button>';}).join('')+'<div class="res" id="scr"></div></div>'
+ +u.scs.map(function(sc,n){return '<div class="card scn" id="scn'+n+'" data-n="'+n+'"><h3>'+(u.scs.length>1?bi('3 · SCENARIO '+(n+1)+' of '+u.scs.length+': WHAT WOULD YOU DO?','3 · 情境判断 '+(n+1)+'/'+u.scs.length+'：你会怎么做？'):bi('3 · SCENARIO: WHAT WOULD YOU DO?','3 · 情境判断：你会怎么做？'))+'</h3><p>'+b(sc.q[0],sc.q[1])+'</p>'
+ +sc.o.map(function(o,j){return '<button class="opt" data-o="'+j+'">'+b(o.t[0],o.t[1])+'</button>';}).join('')+'<div class="res" id="scr'+n+'"></div></div>';}).join('')
  +'<div class="card" id="qz"><h3>'+bi('4 · QUIZ (pass mark '+PASS+'%)','4 · 测验（及格 '+PASS+'%）')+'</h3>'
  +u.quiz.map(function(q,j){return '<div class="qq" data-j="'+j+'"><p><strong>'+(j+1)+'.</strong> '+b(q.q[0],q.q[1])+'</p>'+q.o.map(function(o,k){return '<label><input type="radio" name="q'+j+'" value="'+k+'"><span>'+b(o[0],o[1])+'</span></label>';}).join('')+'<div class="res qr"></div></div>';}).join('')
  +'<div class="row"><button class="btn" id="sub">'+bi('Submit answers','提交答案')+'</button><button class="btn ghost" id="retry" style="display:none">'+bi('Try again','重做')+'</button></div><div class="err" id="qe">'+bi('Answer every question first.','请先回答所有题目。')+'</div><div class="res" id="qs"></div></div>'
@@ -66,18 +67,22 @@ function unit(u,i){
  h+='<div class="nav">'+(pv?'<button class="btn ghost" data-go="'+pv.id+'">← '+bi(pv.en,pv.zh)+'</button>':'<button class="btn ghost" data-go="home">← '+bi('Overview','总览')+'</button>')+(nx?'<button class="btn" data-go="'+nx.id+'">'+bi(nx.en,nx.zh)+' →</button>':'<a class="btn" style="text-decoration:none" href="../index.html">'+bi('Back to portal','回学习门户')+' →</a>')+'</div>';
  return h;
 }
+function scAll(u,p){for(var n=0;n<u.scs.length;n++){if(!p[n?'s'+n:'s'])return false;}return true;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
 function bindUnit(u){
  var id=u.id;
- $('#scn').addEventListener('click',function(e){
-  var t=e.target.closest('.opt');if(!t)return;
-  var j=+t.getAttribute('data-o'),o=u.sc.o[j],r=$('#scr');
-  document.querySelectorAll('#scn .opt').forEach(function(x){x.classList.remove('sel','good','bad');});
-  t.classList.add(o.ok?'good':'bad');
-  r.className='res '+(o.ok?'ok':'no');
-  r.innerHTML='<strong>'+(o.ok?bi('Good call','判断正确'):bi('Think again','再想想'))+'</strong> — '+b(o.w[0],o.w[1]);
-  if(o.ok){setP(id,{s:1});$('#s3').className='ok';}
+ u.scs.forEach(function(sc,n){
+  var box=$('#scn'+n);
+  box.addEventListener('click',function(e){
+   var t=e.target.closest('.opt');if(!t)return;
+   var j=+t.getAttribute('data-o'),o=sc.o[j],r=$('#scr'+n);
+   box.querySelectorAll('.opt').forEach(function(x){x.classList.remove('sel','good','bad');});
+   t.classList.add(o.ok?'good':'bad');
+   r.className='res '+(o.ok?'ok':'no');
+   r.innerHTML='<strong>'+(o.ok?bi('Good call','判断正确'):bi('Think again','再想想'))+'</strong> — '+b(o.w[0],o.w[1]);
+   if(o.ok){var pt={};pt[n?'s'+n:'s']=1;setP(id,pt);if(scAll(u,P(id)))$('#s3').className='ok';}
+  });
  });
  var form=$('#qz');
  function lock(v){form.querySelectorAll('input').forEach(function(x){x.disabled=v;});$('#sub').style.display=v?'none':'';$('#retry').style.display=v?'':'none';}
@@ -124,4 +129,23 @@ function render(){
 $('#view').addEventListener('click',function(e){var t=e.target.closest('[data-go]');if(t)go(t.getAttribute('data-go'));});
 window.addEventListener('hashchange',render);
 render();
+}
+function hash(t){var h=0,i;for(i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))>>>0;return h;}
+function rot(arr,shift){var n=arr.length,r=new Array(n),i;for(i=0;i<n;i++)r[(i+shift)%n]=arr[i];return r;}
+function merge(){
+ var X=window.COURSE_EXTRA||{};
+ C.units.forEach(function(u){
+  u.scs=[u.sc];
+  var x=X[u.id];if(!x)return;
+  (x.sc||[]).forEach(function(s){var sh=hash(s.q[0])%s.o.length;u.scs.push({q:s.q,o:rot(s.o,sh)});});
+  (x.quiz||[]).forEach(function(q){var sh=hash(q.q[0])%q.o.length;u.quiz.push({q:q.q,o:rot(q.o,sh),a:(q.a+sh)%q.o.length,w:q.w});});
+ });
+}
+var started=false;
+function go2(ok){if(started)return;started=true;try{if(ok)merge();else C.units.forEach(function(u){u.scs=[u.sc];});}catch(e){C.units.forEach(function(u){u.scs=u.scs||[u.sc];});}main();}
+var sc=document.createElement('script');
+sc.src='extra.js?v=1';
+sc.onload=function(){go2(true);};
+sc.onerror=function(){go2(false);};
+document.head.appendChild(sc);
 })();

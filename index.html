@@ -44,11 +44,11 @@ main{margin:0 auto}
 <script>
 (function(){
 var COURSES=[
- {id:'fin',href:'finance/index.html',en:'Finance and profit',zh:'财务与利润',u:'14 modules 模块',t:'~3.5 h',req:{m:1,l:0,n:0}},
- {id:'ops',href:'ops/index.html',en:'Operations: production, waste, ordering, stock, labour',zh:'运营：生产、损耗、订货、盘点、人工',u:'6 units 单元',t:'~1.5 h',req:{m:1,l:1,n:1}},
- {id:'prd',href:'prd/index.html',en:'Product, display, service, food safety',zh:'产品、陈列、服务、食品安全',u:'6 units 单元',t:'~1.5 h',req:{m:0,l:1,n:1}},
- {id:'led',href:'led/index.html',en:'Leadership: coaching, feedback, 1:1, reporting',zh:'领导力：辅导、反馈、1:1、汇报',u:'6 units 单元',t:'~1.5 h',req:{m:1,l:0,n:0}},
- {id:'com',href:'com/index.html',en:'Communication, conflict, personal leadership',zh:'沟通、冲突解决、个人领导力',u:'6 units 单元',t:'~1.5 h',req:{m:1,l:1,n:0}}
+ {id:'prd',href:'prd/index.html',en:'Product, display, service, food safety',zh:'产品、陈列、服务、食品安全',u:'6 units 单元',t:'~1.5 h',lv:'Foundation 基础',req:{m:0,l:1,n:1}},
+ {id:'ops',href:'ops/index.html',en:'Operations: production, waste, ordering, stock, labour',zh:'运营：生产、损耗、订货、盘点、人工',u:'6 units 单元',t:'~1.5 h',lv:'Foundation 基础',req:{m:1,l:1,n:1}},
+ {id:'com',href:'com/index.html',en:'Communication, conflict, personal leadership',zh:'沟通、冲突解决、个人领导力',u:'6 units 单元',t:'~1.5 h',lv:'Core 进阶',req:{m:1,l:1,n:0}},
+ {id:'led',href:'led/index.html',en:'Leadership: coaching, feedback, 1:1, reporting',zh:'领导力：辅导、反馈、1:1、汇报',u:'6 units 单元',t:'~1.5 h',lv:'Management 管理',req:{m:1,l:0,n:0}},
+ {id:'fin',href:'finance/index.html',en:'Finance and profit',zh:'财务与利润',u:'14 modules 模块',t:'~3.5 h',lv:'Management 管理',req:{m:1,l:0,n:0}}
 ];
 var role='m';
 try{role=localStorage.getItem('ktt_role')||'m';}catch(e){}
@@ -62,15 +62,15 @@ function prog(id){
 }
 function draw(){
  var req=0,h='';
- COURSES.slice().sort(function(a,b){return (b.soon?-1:0)-(a.soon?-1:0)||b.req[role]-a.req[role];}).forEach(function(c){
+ COURSES.forEach(function(c,ci){
   var q=c.req[role];if(q&&!c.soon)req++;
   var p=c.soon?0:prog(c.id);
-  h+='<div class="cc'+(c.soon?' soon':'')+'"><span class="tg '+(q?'rq':'op')+'">'+(q?'Required 必修':'Optional 选修')+'</span><p style="font-weight:600;margin:0;line-height:1.35">'+c.en+'</p><p class="note" style="margin:0">'+c.zh+'</p><p class="note" style="margin:8px 0 0">'+c.u+(c.t?' · '+c.t:'')+'</p>'
+  h+='<div class="cc'+(c.soon?' soon':'')+'"><p class="note" style="margin:0 0 6px;font-weight:600">Step 步骤 '+(ci+1)+' · '+c.lv+'</p><span class="tg '+(q?'rq':'op')+'">'+(q?'Required 必修':'Optional 选修')+'</span><p style="font-weight:600;margin:0;line-height:1.35">'+c.en+'</p><p class="note" style="margin:0">'+c.zh+'</p><p class="note" style="margin:8px 0 0">'+c.u+(c.t?' · '+c.t:'')+'</p>'
   +(c.soon?'':'<div class="bar"><i style="width:'+p+'%"></i></div><p class="note" style="margin:4px 0 0">'+(p?p+'% done 已完成':'Not started 未开始')+'</p><a class="btn" href="'+c.href+'">'+(p?'Continue 继续':'Start 开始')+' →</a>')+'</div>';
  });
  document.getElementById('grid').innerHTML=h;
- document.getElementById('hd').textContent='Your required courses 你的必修课 · '+req+' available now 目前可学';
- var first=COURSES.filter(function(c){return !c.soon&&c.req[role];}).sort(function(a,b){return prog(a.id)-prog(b.id);}).filter(function(c){return prog(c.id)<100;})[0]||COURSES[0];
+ document.getElementById('hd').textContent='Learning path 学习路径：基础 → 管理 Foundation → Management · '+req+' required for you 你的必修课';
+ var first=COURSES.filter(function(c){return !c.soon&&c.req[role]&&prog(c.id)<100;})[0]||COURSES[0];
  document.getElementById('nextc').innerHTML='<p class="big" style="font-size:16px;font-weight:600;margin:0">Next: '+first.en+'</p><p class="note" style="margin:0 0 8px">下一步：'+first.zh+'</p><a class="btn" style="text-decoration:none;display:inline-block" href="'+first.href+'">'+(prog(first.id)?'Continue 继续':'Start 开始')+' →</a>';
  document.querySelectorAll('#roles .chip').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-r')===role);});
 }

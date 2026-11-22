@@ -46,9 +46,9 @@ main{margin:0 auto}
 var COURSES=[
  {id:'fin',href:'finance/index.html',en:'Finance and profit',zh:'财务与利润',u:'14 modules 模块',t:'~3.5 h',req:{m:1,l:0,n:0}},
  {id:'ops',href:'ops/index.html',en:'Operations: production, waste, ordering, stock, labour',zh:'运营：生产、损耗、订货、盘点、人工',u:'6 units 单元',t:'~1.5 h',req:{m:1,l:1,n:1}},
- {id:'prd',soon:1,en:'Product, display, service, food safety',zh:'产品、陈列、服务、食品安全',u:'Coming soon 即将推出',t:'',req:{m:0,l:1,n:1}},
- {id:'led',soon:1,en:'Leadership: coaching, reporting, 1:1',zh:'领导力：辅导、汇报、1:1',u:'Coming soon 即将推出',t:'',req:{m:1,l:0,n:0}},
- {id:'com',soon:1,en:'Communication, conflict, analysing people',zh:'沟通、冲突解决、分析人',u:'Coming soon 即将推出',t:'',req:{m:1,l:1,n:0}}
+ {id:'prd',href:'prd/index.html',en:'Product, display, service, food safety',zh:'产品、陈列、服务、食品安全',u:'6 units 单元',t:'~1.5 h',req:{m:0,l:1,n:1}},
+ {id:'led',href:'led/index.html',en:'Leadership: coaching, feedback, 1:1, reporting',zh:'领导力：辅导、反馈、1:1、汇报',u:'6 units 单元',t:'~1.5 h',req:{m:1,l:0,n:0}},
+ {id:'com',href:'com/index.html',en:'Communication, conflict, personal leadership',zh:'沟通、冲突解决、个人领导力',u:'6 units 单元',t:'~1.5 h',req:{m:1,l:1,n:0}}
 ];
 var role='m';
 try{role=localStorage.getItem('ktt_role')||'m';}catch(e){}
@@ -56,7 +56,7 @@ function prog(id){
  var s;
  try{
   if(id==='fin'){s=JSON.parse(localStorage.getItem('pl_seen')||'{}')||{};return Math.round(Object.keys(s).length/18*100);}
-  if(id==='ops'){s=JSON.parse(localStorage.getItem('ktt_v1')||'{}')||{};var o=s.ops||{},n=0,k;for(k in o){if(o[k].q>=80&&o[k].t)n++;}return Math.round(n/6*100);}
+  if(id!=='fin'){s=JSON.parse(localStorage.getItem('ktt_v1')||'{}')||{};var o=s[id]||{},n=0,k;for(k in o){if(o[k].q>=80&&o[k].t)n++;}return Math.round(n/6*100);}
  }catch(e){}
  return 0;
 }
